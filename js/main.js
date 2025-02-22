@@ -4,6 +4,7 @@ let tags = new Set();
 let developers = new Set();
 let publishers = new Set();
 let voiceovers = new Set();
+let languages = new Set();
 let categories = new Set();
 let difficulty = new Set();
 
@@ -30,6 +31,9 @@ d3.json('data/steamdb.json').then(data => {
         d.voiceovers = d.voiceovers ? d.voiceovers.split(",") : [];
         d.voiceovers.forEach(g => voiceovers.add(g));
 
+        d.languages = d.languages ? d.languages.split(",") : [];
+        d.languages.forEach(g => languages.add(g));
+
         d.categories = d.categories ? d.categories.split(","): [];
         d.categories.forEach(g => categories.add(g));
 
@@ -49,6 +53,8 @@ d3.json('data/steamdb.json').then(data => {
     console.log(publishers)
     console.log("# voiceovers: " + voiceovers.size)
     console.log(voiceovers)
+    console.log("# languages: " + languages.size)
+    console.log(languages)
     console.log("# categories: " + categories.size)
     console.log(categories)
     console.log("# difficulty: " + difficulty.size)
