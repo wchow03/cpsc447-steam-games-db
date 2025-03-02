@@ -18,7 +18,25 @@ let difficulty = new Set();
 let difficultyCount = {};
 
 
-d3.json('data/steamdb.json').then(data => {
+d3.json('data/steamdb.json').then(originalData => {
+    const fieldsToKeep = ['sid', 'store_uscore', 'published_store', 'name', 'description', 'platforms',
+        'developers', 'publishers', 'languages', 'voiceovers', 'categories', 'genres', 'tags', 'gfq_difficulty',
+        'gfq_rating', 'gfq_length', 'stsp_owners', 'stsp_mdntime', 'hltb_single', 'hltb_complete', 'meta_score',
+        'meta_uscore', 'igdb_single', 'igdb_complete', 'igdb_score', 'igdb_uscore'
+    ]
+
+    const data = []
+
+    // filter unwanted attributes
+    originalData.forEach(d => 
+        data.push(Object.fromEntries(Object.entries(d).filter(x => fieldsToKeep.includes(x[0]))))
+    )
+
+    // use top 1000 games (defined by stsp_owners)
+    data.sort((a, b) => b['stsp_owners'] - a['stsp_owners'])
+    data.splice(1000);
+
+    // text processing
     data.forEach(d => {
         // console.log(d)
         d.genres = d.genres ? d.genres.split(",") : [];
@@ -75,34 +93,42 @@ d3.json('data/steamdb.json').then(data => {
             difficultyCount[g] = (difficultyCount[g] || 0) + 1;
         });
     })
-    
-    console.log("# genres: " + genres.size)
-    // console.log(genres)
-    console.log(genresCount)
-    console.log("# platforms: " + platforms.size)
-    // console.log(platforms)
-    console.log(platformsCount)
-    console.log("# tags: " + tags.size)
-    // console.log(tags)
-    console.log(tagsCount)
-    console.log("# developers: " + developers.size)
-    // console.log(developers)
-    console.log(developersCount)
-    console.log("# publishers: " + publishers.size)
-    // console.log(publishers)
-    console.log(publishersCount)
-    console.log("# voiceovers: " + voiceovers.size)
-    // console.log(voiceovers)
-    console.log(voiceoversCount)
-    console.log("# languages: " + languages.size)
-    // console.log(languages)
-    console.log(languagesCount)
-    console.log("# categories: " + categories.size)
-    // console.log(categories)
-    console.log(categoriesCount)
-    console.log("# difficulty: " + difficulty.size)
-    // console.log(difficulty)
-    console.log(difficultyCount)
+    // console.log(data)
 
-    // console.log(data);
+    // ---------------
+    // logs to help debug text processing
+    // console.log("# genres: " + genres.size)
+    // console.log(genres)
+    // console.log(genresCount)
+    // console.log("# platforms: " + platforms.size)
+    // console.log(platforms)
+    // console.log(platformsCount)
+    // console.log("# tags: " + tags.size)
+    // console.log(tags)
+    // console.log(tagsCount)
+    // console.log("# developers: " + developers.size)
+    // console.log(developers)
+    // console.log(developersCount)
+    // console.log("# publishers: " + publishers.size)
+    // console.log(publishers)
+    // console.log(publishersCount)
+    // console.log("# voiceovers: " + voiceovers.size)
+    // console.log(voiceovers)
+    // console.log(voiceoversCount)
+    // console.log("# languages: " + languages.size)
+    // console.log(languages)
+    // console.log(languagesCount)
+    // console.log("# categories: " + categories.size)
+    // console.log(categories)
+    // console.log(categoriesCount)
+    // console.log("# difficulty: " + difficulty.size)
+    // console.log(difficulty)
+    // console.log(difficultyCount)
+    // --------------
+
+    let barChart = new BarChart({ parentElement: '#barchart'}, data);
+
+    let streamGraph = new StreamGraph({ parentElement: '#streamgraph'}, data);
+
+    let treeMap = new TreeMap({ parentElement: '#treemap'}, data);
 })
