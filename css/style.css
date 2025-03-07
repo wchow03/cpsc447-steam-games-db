@@ -1,0 +1,14 @@
+/* intro segment */
+
+.intro-segment {
+    /* TODO: update font later */
+    padding: 20px;
+    font-family: 'monospace', Arial, sans-serif;
+    width: 25%;
+    /* .title {
+        color: red
+    }
+    .description {
+        color: blue
+    } */
+}
