@@ -92,6 +92,8 @@ d3.json('data/steamdb.json').then(originalData => {
             difficulty.add(g)
             difficultyCount[g] = (difficultyCount[g] || 0) + 1;
         });
+
+        d.published_store = d.published_store ? new Date(d.published_store) : new Date("");
     })
     // console.log(data)
 
