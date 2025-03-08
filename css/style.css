@@ -1,14 +1,37 @@
 /* intro segment */
 
-.intro-segment {
+.body {
     /* TODO: update font later */
-    padding: 20px;
     font-family: 'monospace', Arial, sans-serif;
+}
+.intro-segment {
+    padding: 20px;
     width: 25%;
-    /* .title {
-        color: red
+}
+
+/* treemap slider */
+.treemap {
+    .slider{
+        width: 500px;
+        /* TODO update position */
+        position: absolute;
+        top: 10%;
+        left: 30%;
     }
-    .description {
-        color: blue
-    } */
+}
+
+.form-range {
+    width: -webkit-fill-available;
+    margin: 0px 3% 0px 3%;
+}
+
+.slider-labels{
+    display: flex;
+    justify-content: space-between;
+}
+
+.slider-tick-label {
+    width: 50px;
+    text-align: center;
+    font-size: 15px;
 }
