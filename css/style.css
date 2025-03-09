@@ -12,3 +12,13 @@
         color: blue
     } */
 }
+
+.bar {
+    fill:rgb(151, 42, 42);
+    shape-rendering: crispEdges;
+}
+
+.bar-chart-y-axis text {
+    font-weight: bold;
+    font-size: 18px;
+}
