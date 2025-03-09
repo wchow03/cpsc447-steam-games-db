@@ -56,6 +56,9 @@ class StreamGraph {
         // .tickFormat(d3.timeFormat("%Y"))
         // .tickValues([1900, 1925, 1975, 2000]); //placeholder
 
+      // vis.yAxis = d3.axisLeft(vis.yScale)
+      //   .tickSizeOuter(0);
+
       vis.xAxisG = vis.chartArea.append('g')
         .attr('class', 'axis x-axis')
         .attr("transform", `translate(0, ${height * 0.8})`);
@@ -95,24 +98,47 @@ class StreamGraph {
       console.log("genre categories");
       console.log(vis.config.genreCategories);
 
+      // vis.genreCountG = {};
+      vis.genreCountG = [];
+      vis.dataYearG.forEach(yearG => {
+        // console.log(yearG);
+        let genreYearG = {}
+        yearG[1].forEach(d => {
+          d.genres.forEach(g => {
+            genreYearG[g] = (genreYearG[g] || 0) + 1;
+            // vis.genreCountG[yearG[0]][g] = (vis.genreCountG[yearG[0]][g] || 0) + 1;
+          })
+        })
+        // vis.genreCountG[yearG[0]] = genreYearG;
+        // vis.genreCountG.push([yearG[0], genreYearG]);
+        vis.genreCountG.push({...genreYearG, year: yearG[0]});
+      })
+      console.log("genre count G");
+      console.log(vis.genreCountG);
+
       // Stack the data
       vis.stackedData = d3.stack()
         .offset(d3.stackOffsetSilhouette)
+        .order(d3.stackOrderNone)
         .keys(vis.config.genreCategories)
-        (vis.data)
+        // (vis.data)
+        (vis.genreCountG)
+
+      console.log("stacked data");
+      console.log(vis.stackedData);
 
       // Area generator
       vis.area = d3.area()
         // .x(d => console.log(d))
-        .x(d => vis.xScale(vis.xValue(d)))
-        .y0(d => vis.yScale(vis.yValue(d[0])))
-        .y1(d => vis.yScale(vis.yValue(d[1])))
+        // .x(d => vis.xScale(vis.xValue(d)))
+        .x(d => vis.xScale(d.data.year))
+        .y0(d => vis.yScale(d[0]))
+        .y1(d => vis.yScale(d[1]));
 
       vis.svg.selectAll(".genres")
         .data(vis.stackedData)
-        .enter()
-        .append('path')
-          .attr('class', 'area')
+        .join('path')
+          .attr('class', 'area genres')
           .attr('d', vis.area)
 
       vis.xAxisG
