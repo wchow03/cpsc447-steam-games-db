@@ -13,6 +13,44 @@
     } */
 }
 
+.tooltip {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 8px;
+    border-radius: 5px;
+    font-size: 14px;
+    pointer-events: none; /* Prevents interfering with mouse events */
+    transition: opacity 0.2s ease-in-out;
+}
+
+.legend {
+    display: flex;
+    flex-wrap: wrap; /* Allows wrapping if there are many items */
+    align-items: center;
+    justify-content: center; /* Centers the legend items */
+    gap: 10px; /* Adds spacing between legend items */
+    margin-top: 10px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+}
+
+#reset-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 5px;
+}
+
+#reset-button:hover {
+    background-color: #0056b3;
+}
 .bar {
     fill:rgb(151, 42, 42);
     shape-rendering: crispEdges;
@@ -22,3 +60,4 @@
     font-weight: bold;
     font-size: 18px;
 }
+
