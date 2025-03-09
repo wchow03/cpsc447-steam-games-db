@@ -99,9 +99,9 @@ d3.json('data/steamdb.json').then(originalData => {
 
     // ---------------
     // logs to help debug text processing
-    // console.log("# genres: " + genres.size)
-    // console.log(genres)
-    // console.log(genresCount)
+    console.log("# genres: " + genres.size)
+    console.log(genres)
+    console.log(genresCount)
     // console.log("# platforms: " + platforms.size)
     // console.log(platforms)
     // console.log(platformsCount)
@@ -130,7 +130,7 @@ d3.json('data/steamdb.json').then(originalData => {
 
     let barChart = new BarChart({ parentElement: '#barchart'}, data);
 
-    let streamGraph = new StreamGraph({ parentElement: '#streamgraph'}, data);
+    let streamGraph = new StreamGraph({ parentElement: '#streamgraph', genreCategories: genres }, data);
 
     let treeMap = new TreeMap({ parentElement: '#treemap'}, data);
 })
@@ -140,6 +140,6 @@ d3.json('data/steamdb.json').then(originalData => {
 const intro_segment = document.querySelector('.intro-segment')
 
 const desc = intro_segment.querySelector('.description')
-desc.innerHTML = `With an ever growing catalogue of games on Steam, each regularly being downloaded and played, it begs the question: 
-    what makes the top owned games so popular? Here, you\'ll explore the top 1000 owned games on Steam and analyze game difficulties, playtimes, and explore reach 
-    of audiences by comparing trends of popular genres and languages across the years.`
+// desc.innerHTML = `With an ever growing catalogue of games on Steam, each regularly being downloaded and played, it begs the question: 
+//     what makes the top owned games so popular? Here, you\'ll explore the top 1000 owned games on Steam and analyze game difficulties, playtimes, and explore reach 
+//     of audiences by comparing trends of popular genres and languages across the years.`

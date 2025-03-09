@@ -12,3 +12,15 @@
         color: blue
     } */
 }
+
+.stream-graph-svg {
+    background-color: red;
+}
+
+.chart {
+    background-color: purple;
+}
+
+.x-axis {
+    background-color: blue;
+}
