@@ -56,6 +56,8 @@ class StreamGraph {
         // .attr('transform', `translate(0, ${height*0.8})`);
         .attr("transform", `translate(${vis.config.margin.left}, ${vis.config.margin.top})`);
 
+      vis.chart = vis.chartArea.append('g');
+
       vis.xAxis = d3.axisBottom(vis.xScale)
         .tickSize(-height*0.7)
         .ticks(24)
@@ -65,9 +67,13 @@ class StreamGraph {
       // vis.yAxis = d3.axisLeft(vis.yScale)
       //   .tickSizeOuter(0);
 
-      vis.xAxisG = vis.chartArea.append('g')
+      vis.xAxisG = vis.chart.append('g')
         .attr('class', 'axis x-axis')
         .attr("transform", `translate(0, ${height * 0.8})`);
+
+      vis.stack = d3.stack()
+        // .offset(d3.stackOffsetSilhouette)
+        .keys(vis.config.genreCategories)
       
       vis.updateVis();
     }
@@ -83,22 +89,6 @@ class StreamGraph {
       vis.xValue = d => d.published_store.getFullYear();
       vis.yValue = d => d.genres
       console.log(d3.extent(vis.data, vis.xValue));
-
-      // const nYears = d3.extent(vis.data, d => vis.xValue(d).getFullYear());
-      // console.log(nYears)
-      // // vis.xScale.domain(Array.from(new Array(nYears[1] - nYears[0] + 1), (_, i) => i + nYears[0]))
-      // vis.xScale.domain(Array.from({length: nYears[1] - nYears[0] + 1}, (_, i) => i + nYears[0]))
-      // vis.xScale.domain(d3.extent(vis.data, d => vis.xValue(d).getFullYear()));
-      vis.xScale.domain(d3.extent(vis.data, d => vis.xValue(d)));
-      vis.yScale.domain([-250, 250]);
-      vis.colour.domain(vis.config.genreCategories);
-
-      vis.renderVis();
-    }
-  
-    renderVis() {
-      let vis = this;
-      // Todo: Bind data to visual elements, update axes
 
       // Group by published year
       vis.dataYearG = d3.groups(vis.data, d => d.published_store.getFullYear());
@@ -132,32 +122,57 @@ class StreamGraph {
       console.log(vis.genreCountG);
 
       // Stack the data
-      vis.stackedData = d3.stack()
-        .offset(d3.stackOffsetSilhouette)
-        // .offset(d3.stackOffsetWiggle)
-        // .order(d3.stackOrderNone)
-        .keys(vis.config.genreCategories)
-        // (vis.data)
-        (vis.genreCountG)
+      vis.stack.value((d, key) => d[key])
+      vis.stackedData = vis.stack(vis.genreCountG);
+      // vis.stackedData = d3.stack()
+      //   .offset(d3.stackOffsetSilhouette)
+      //   // .offset(d3.stackOffsetWiggle)
+      //   // .order(d3.stackOrderNone)
+      //   .keys(vis.config.genreCategories)
+      //   // (vis.data)
+      //   (vis.genreCountG)
 
       console.log("stacked data");
       console.log(vis.stackedData);
+
+      // const nYears = d3.extent(vis.data, d => vis.xValue(d).getFullYear());
+      // console.log(nYears)
+      // // vis.xScale.domain(Array.from(new Array(nYears[1] - nYears[0] + 1), (_, i) => i + nYears[0]))
+      // vis.xScale.domain(Array.from({length: nYears[1] - nYears[0] + 1}, (_, i) => i + nYears[0]))
+      // vis.xScale.domain(d3.extent(vis.data, d => vis.xValue(d).getFullYear()));
+      vis.xScale.domain(d3.extent(vis.data, d => vis.xValue(d)));
+      vis.yScale.domain([-250, 250]);
+      vis.colour.domain(vis.config.genreCategories);
+
+      vis.renderVis();
+    }
+  
+    renderVis() {
+      let vis = this;
+      // Todo: Bind data to visual elements, update axes
 
       // Area generator
       vis.area = d3.area()
         // .x(d => console.log(d))
         // .x(d => vis.xScale(vis.xValue(d)))
-        .x(d => vis.xScale(d.data.year))
+        .x((d, i) => vis.xScale(d.data.year))
         .y0(d => vis.yScale(d[0]))
         .y1(d => vis.yScale(d[1]))
         // .curve(d3.curveMonotoneX);
 
-      vis.chartArea.selectAll(".genres")
+      vis.mousemove = function(event, d, i) {
+        let grp = d.key
+        console.log("section -- debug");
+        console.log(grp);
+      }
+
+      vis.chart.selectAll(".area")
         .data(vis.stackedData)
         .join('path')
-          .attr('class', 'area genres')
+          .attr('class', 'area')
           .style('fill', d => vis.colour(d.key))
           .attr('d', vis.area)
+          .on("mousemove", vis.mousemove)
 
       vis.xAxisG
         .call(vis.xAxis)
