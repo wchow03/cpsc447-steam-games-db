@@ -40,10 +40,16 @@ class StreamGraph {
 
       // Init axes scales
       vis.xScale = d3.scaleLinear()
+      // vis.xScale = d3.scaleTime()
+      // vis.xScale = d3.scaleBand()
         .range([0, width]);
 
       vis.yScale = d3.scaleLinear()
         .range([height, 0]);
+      
+      // Colour
+      vis.colour = d3.scaleOrdinal()
+        .range(d3.schemeDark2);
       
       vis.chartArea = vis.svg.append('g')
         .attr('class', 'chart')
@@ -71,8 +77,10 @@ class StreamGraph {
       // Todo: Prepare data and scales
 
       console.log(vis.data);
+      // vis.validData = vis.data.filter(d => d.published_store !== null)
+      // console.log(vis.data);
 
-      vis.xValue = d => d.published_store;
+      vis.xValue = d => d.published_store.getFullYear();
       vis.yValue = d => d.genres
       console.log(d3.extent(vis.data, vis.xValue));
 
@@ -80,8 +88,10 @@ class StreamGraph {
       // console.log(nYears)
       // // vis.xScale.domain(Array.from(new Array(nYears[1] - nYears[0] + 1), (_, i) => i + nYears[0]))
       // vis.xScale.domain(Array.from({length: nYears[1] - nYears[0] + 1}, (_, i) => i + nYears[0]))
-      vis.xScale.domain(d3.extent(vis.data, d => vis.xValue(d).getFullYear()));
-      vis.yScale.domain(-100000, 100000)
+      // vis.xScale.domain(d3.extent(vis.data, d => vis.xValue(d).getFullYear()));
+      vis.xScale.domain(d3.extent(vis.data, d => vis.xValue(d)));
+      vis.yScale.domain([-250, 250]);
+      vis.colour.domain(vis.config.genreCategories);
 
       vis.renderVis();
     }
@@ -94,6 +104,10 @@ class StreamGraph {
       vis.dataYearG = d3.groups(vis.data, d => d.published_store.getFullYear());
       console.log("Year groups");
       console.log(vis.dataYearG);
+      // Remove games with no publish date
+      vis.dataYearG = vis.dataYearG.filter(d => Boolean(d[0]));
+      console.log("Year groups filtered");
+      console.log(vis.dataYearG);
 
       console.log("genre categories");
       console.log(vis.config.genreCategories);
@@ -102,7 +116,8 @@ class StreamGraph {
       vis.genreCountG = [];
       vis.dataYearG.forEach(yearG => {
         // console.log(yearG);
-        let genreYearG = {}
+        let genreYearG = {};
+        vis.config.genreCategories.forEach(g => genreYearG[g] = 0);
         yearG[1].forEach(d => {
           d.genres.forEach(g => {
             genreYearG[g] = (genreYearG[g] || 0) + 1;
@@ -119,7 +134,8 @@ class StreamGraph {
       // Stack the data
       vis.stackedData = d3.stack()
         .offset(d3.stackOffsetSilhouette)
-        .order(d3.stackOrderNone)
+        // .offset(d3.stackOffsetWiggle)
+        // .order(d3.stackOrderNone)
         .keys(vis.config.genreCategories)
         // (vis.data)
         (vis.genreCountG)
@@ -133,12 +149,14 @@ class StreamGraph {
         // .x(d => vis.xScale(vis.xValue(d)))
         .x(d => vis.xScale(d.data.year))
         .y0(d => vis.yScale(d[0]))
-        .y1(d => vis.yScale(d[1]));
+        .y1(d => vis.yScale(d[1]))
+        // .curve(d3.curveMonotoneX);
 
-      vis.svg.selectAll(".genres")
+      vis.chartArea.selectAll(".genres")
         .data(vis.stackedData)
         .join('path')
           .attr('class', 'area genres')
+          .style('fill', d => vis.colour(d.key))
           .attr('d', vis.area)
 
       vis.xAxisG
