@@ -128,11 +128,18 @@ d3.json('data/steamdb.json').then(originalData => {
     // console.log(difficultyCount)
     // --------------
 
-    let barChart = new BarChart({ parentElement: '#barchart'}, data);
+    //let barChart = new BarChart({ parentElement: '#barchart'}, data);
 
-    let streamGraph = new StreamGraph({ parentElement: '#streamgraph'}, data);
+    //let streamGraph = new StreamGraph({ parentElement: '#streamgraph'}, data);
 
-    let treeMap = new TreeMap({ parentElement: '#treemap'}, data);
+    //let treeMap = new TreeMap({ parentElement: '#treemap'}, data);
+
+    bubbleChart = new BubbleChart({ parentElement: '.bubblechart .graph'}, data);
+    document.getElementById("reset-button").addEventListener("click", function() {
+        bubbleChart.filteredData = null;  // Clear filtered data
+        bubbleChart.updateVis();  // Re-render with full dataset
+        this.style.display = "none";  // Hide reset button again
+    });
 })
 
 
