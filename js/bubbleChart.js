@@ -2,8 +2,10 @@ class BubbleChart {
     constructor(_config, data) {
         this.config = {
             parentElement: _config.parentElement,
-            containerWidth: 1500,
-            containerHeight: 1500,
+            // containerWidth: 1500,
+            // containerHeight: 1500,
+            containerWidth: 500,
+            containerHeight: 500,
             margin: {
                 top: 30,
                 right: 10,
@@ -33,7 +35,8 @@ class BubbleChart {
         // Define scales
         vis.sizeScale = d3.scaleSqrt()
             .domain([0, d3.max(vis.data, d => d.stsp_mdntime)])
-            .range([5, 75]); // Bubble radius
+            // .range([5, 75]); // Bubble radius
+            .range([3, 30]); // Bubble radius
 
         vis.colorScale = d3.scaleOrdinal(d3.schemeCategory10);
 

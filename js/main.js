@@ -152,4 +152,30 @@ const intro_segment = document.querySelector('.intro-segment')
 const desc = intro_segment.querySelector('.description')
 desc.innerHTML = `With an ever growing catalogue of games on Steam, each regularly being downloaded and played, it begs the question: 
     what makes the top owned games so popular? Here, you\'ll explore the top 1000 owned games on Steam and analyze game difficulties, playtimes, and explore reach 
-    of audiences by comparing trends of popular genres and languages across the years.`
+    of audiences by comparing trends of popular genres and languages across the years.`;
+
+
+// TODO move this code later
+// for slider, treat default values as index for our custom range
+const sliderValues = [10, 25, 50, 100, 500, 1000]
+
+d3.select('#treemap-slider').append('div')
+    .attr('class', 'slider-labels')
+    .selectAll('text')
+    .data(sliderValues)
+    .enter()
+    .append('text')
+    .attr('class', 'slider-tick-label')
+    .text(d => d)
+
+const slider = d3.select('#treemap-slider')
+    .append('input')
+    .attr('type', 'range')
+    .attr('min', 1)
+    .attr('max', sliderValues.length)
+    .attr('class', 'form-range')
+    .on('input', (event) => {
+        // TODO update onchange later -- currently prints out new value
+        console.log(sliderValues[event.target.value])
+    })
+
