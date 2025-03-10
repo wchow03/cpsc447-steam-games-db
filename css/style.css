@@ -15,7 +15,7 @@
         width: 500px;
         /* TODO update position */
         position: absolute;
-        top: 10%;
+        top: 8%;
         left: 30%;
     }
 }
@@ -73,7 +73,7 @@
 
     .graph {
         position: absolute;
-        top: 15%;
+        top: 12%;
         left: 30%;
     }   
 
@@ -114,3 +114,9 @@
     }
 }
 
+/* streamgraph */
+.streamgraph {
+    position: absolute;
+    top: 70%;
+    left: 3%;
+}
