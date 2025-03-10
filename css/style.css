@@ -36,6 +36,8 @@
     font-size: 15px;
 }
 
+/* global tooltip */
+
 .tooltip {
     position: absolute;
     background-color: rgba(0, 0, 0, 0.8);
@@ -47,21 +49,41 @@
     transition: opacity 0.2s ease-in-out;
 }
 
-.legend {
-    display: flex;
-    flex-wrap: wrap; /* Allows wrapping if there are many items */
-    align-items: center;
-    justify-content: center; /* Centers the legend items */
-    gap: 10px; /* Adds spacing between legend items */
-    margin-top: 10px;
-}
+/* bubble chart */
 
-.legend-item {
-    display: flex;
-    align-items: center;
+.bubblechart {
+    .legend {
+        position: absolute;
+        top: 50%;
+        left: 5%;
+        display: flex;
+        flex-wrap: wrap; /* Allows wrapping if there are many items */
+        align-items: center;
+        /* justify-content: center; Centers the legend items */
+        justify-content: left;
+        gap: 10px; /* Adds spacing between legend items */
+        margin-top: 10px;
+        width: 400px;
+    
+    }
+    .legend-item {
+        display: flex;
+        align-items: center;
+    }
+
+    .graph {
+        position: absolute;
+        top: 15%;
+        left: 30%;
+    }   
+
 }
 
 #reset-button {
+    position: absolute;
+    top: 0;
+    left: 45%;
+    display: flex;
     background-color: #007bff;
     color: white;
     border: none;
@@ -74,13 +96,21 @@
 #reset-button:hover {
     background-color: #0056b3;
 }
-.bar {
-    fill:rgb(151, 42, 42);
-    shape-rendering: crispEdges;
-}
 
-.bar-chart-y-axis text {
-    font-weight: bold;
-    font-size: 18px;
+/* bar chart */
+
+.barchart {
+    position: absolute;
+    top: 5%;
+    left: 65%;
+    .bar {
+        fill:rgb(151, 42, 42);
+        shape-rendering: crispEdges;
+    }
+    
+    .bar-chart-y-axis text {
+        font-weight: bold;
+        font-size: 18px;
+    }
 }
 

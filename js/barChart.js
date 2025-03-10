@@ -8,8 +8,10 @@ class BarChart {
     constructor(_config, data) {
       this.config = {
         parentElement: _config.parentElement,
-        containerWidth: 900,
-        containerHeight: 700,
+        // containerWidth: 900,
+        // containerHeight: 700,
+        containerWidth: 600,
+        containerHeight: 750,
         margin: {
           top: 30,
           right: 300,
@@ -55,7 +57,7 @@ class BarChart {
             .attr('width', vis.config.containerWidth)
             .attr('height', vis.config.containerHeight)
             // .attr('transform', `translate(${vis.config.containerWidth}, 0)`);
-            .attr('transform', `translate(${window.innerWidth - vis.config.containerWidth}, 0)`);
+            // .attr('transform', `translate(${window.innerWidth - vis.config.containerWidth}, 0)`);
         
         // Append group element that will contain actual chart and position according to margins
         vis.chart = vis.svg.append('g')
