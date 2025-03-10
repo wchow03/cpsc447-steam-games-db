@@ -133,7 +133,8 @@ d3.json('data/steamdb.json').then(originalData => {
     let barChart = new BarChart({ parentElement: '#barchart'}, languagesCount);
     barChart.updateVis();
 
-    // let streamGraph = new StreamGraph({ parentElement: '#streamgraph'}, data);
+    let streamGraph = new StreamGraph({ parentElement: '#streamgraph', genreCategories: genres }, data);
+    streamGraph.updateVis();
 
     // let treeMap = new TreeMap({ parentElement: '#treemap'}, data);
   
@@ -150,6 +151,7 @@ d3.json('data/steamdb.json').then(originalData => {
 const intro_segment = document.querySelector('.intro-segment')
 
 const desc = intro_segment.querySelector('.description')
+
 desc.innerHTML = `With an ever growing catalogue of games on Steam, each regularly being downloaded and played, it begs the question: 
     what makes the top owned games so popular? Here, you\'ll explore the top 1000 owned games on Steam and analyze game difficulties, playtimes, and explore reach 
     of audiences by comparing trends of popular genres and languages across the years.`;
