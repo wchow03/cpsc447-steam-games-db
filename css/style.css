@@ -1,26 +1,116 @@
 /* intro segment */
 
-.intro-segment {
+.body {
     /* TODO: update font later */
-    padding: 20px;
     font-family: 'monospace', Arial, sans-serif;
+}
+.intro-segment {
+    padding: 20px;
     width: 25%;
-    /* .title {
-        color: red
+}
+
+/* treemap slider */
+.treemap {
+    .slider{
+        width: 500px;
+        /* TODO update position */
+        position: absolute;
+        top: 10%;
+        left: 30%;
     }
-    .description {
-        color: blue
-    } */
 }
 
-.stream-graph-svg {
-    /* background-color: red; */
+.form-range {
+    width: -webkit-fill-available;
+    margin: 0px 3% 0px 3%;
 }
 
-.chart {
-    background-color: purple;
+.slider-labels{
+    display: flex;
+    justify-content: space-between;
 }
 
-.x-axis {
-    background-color: blue;
+.slider-tick-label {
+    width: 50px;
+    text-align: center;
+    font-size: 15px;
 }
+
+/* global tooltip */
+
+.tooltip {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 8px;
+    border-radius: 5px;
+    font-size: 14px;
+    pointer-events: none; /* Prevents interfering with mouse events */
+    transition: opacity 0.2s ease-in-out;
+}
+
+/* bubble chart */
+
+.bubblechart {
+    .legend {
+        position: absolute;
+        top: 50%;
+        left: 5%;
+        display: flex;
+        flex-wrap: wrap; /* Allows wrapping if there are many items */
+        align-items: center;
+        /* justify-content: center; Centers the legend items */
+        justify-content: left;
+        gap: 10px; /* Adds spacing between legend items */
+        margin-top: 10px;
+        width: 400px;
+    
+    }
+    .legend-item {
+        display: flex;
+        align-items: center;
+    }
+
+    .graph {
+        position: absolute;
+        top: 15%;
+        left: 30%;
+    }   
+
+}
+
+#reset-button {
+    position: absolute;
+    top: 0;
+    left: 45%;
+    display: flex;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 5px;
+}
+
+#reset-button:hover {
+    background-color: #0056b3;
+}
+
+/* bar chart */
+
+.barchart {
+    position: absolute;
+    top: 5%;
+    left: 65%;
+    .bar {
+        fill:rgb(151, 42, 42);
+        shape-rendering: crispEdges;
+    }
+    
+    .bar-chart-y-axis text {
+        font-weight: bold;
+        font-size: 18px;
+    }
+}
+
