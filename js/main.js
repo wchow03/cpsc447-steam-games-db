@@ -99,9 +99,9 @@ d3.json('data/steamdb.json').then(originalData => {
 
     // ---------------
     // logs to help debug text processing
-    console.log("# genres: " + genres.size)
-    console.log(genres)
-    console.log(genresCount)
+    // console.log("# genres: " + genres.size)
+    // console.log(genres)
+    // console.log(genresCount)
     // console.log("# platforms: " + platforms.size)
     // console.log(platforms)
     // console.log(platformsCount)
@@ -131,7 +131,6 @@ d3.json('data/steamdb.json').then(originalData => {
     let barChart = new BarChart({ parentElement: '#barchart'}, data);
 
     let streamGraph = new StreamGraph({ parentElement: '#streamgraph', genreCategories: genres }, data);
-    // let streamGraph = new StreamGraph({ parentElement: '#streamgraph', genreCategories: ["Action"] }, data);
     streamGraph.updateVis();
 
     let treeMap = new TreeMap({ parentElement: '#treemap'}, data);
