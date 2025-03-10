@@ -136,14 +136,21 @@ d3.json('data/steamdb.json').then(originalData => {
     let streamGraph = new StreamGraph({ parentElement: '#streamgraph', genreCategories: genres }, data);
     streamGraph.updateVis();
 
-    // let treeMap = new TreeMap({ parentElement: '#treemap'}, data);
-  
-  let bubbleChart = new BubbleChart({ parentElement: '.bubblechart .graph'}, data);
+    let treeMap = new TreeMap({ parentElement: '.treemap .graph'}, data);
+
     document.getElementById("reset-button").addEventListener("click", function() {
-        bubbleChart.filteredData = null;  // Clear filtered data
-        bubbleChart.updateVis();  // Re-render with full dataset
+        treeMap.filteredData = null;  // Clear filtered data
+        treeMap.updateVis();  // Re-render with full dataset
         this.style.display = "none";  // Hide reset button again
     });
+  
+    // let bubbleChart = new BubbleChart({ parentElement: '.bubblechart .graph'}, data);
+    //
+    // document.getElementById("reset-button").addEventListener("click", function() {
+    //     bubbleChart.filteredData = null;  // Clear filtered data
+    //     bubbleChart.updateVis();  // Re-render with full dataset
+    //     this.style.display = "none";  // Hide reset button again
+    //  });
 })
 
 
