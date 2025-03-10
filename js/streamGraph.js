@@ -61,6 +61,7 @@ class StreamGraph {
       vis.xAxis = d3.axisBottom(vis.xScale)
         .tickSize(-height*0.7)
         .ticks(24)
+        .tickFormat(d3.format("d"));
         // .tickFormat(d3.timeFormat("%Y"))
         // .tickValues([1900, 1925, 1975, 2000]); //placeholder
 
@@ -75,7 +76,7 @@ class StreamGraph {
         // .offset(d3.stackOffsetSilhouette)
         .keys(vis.config.genreCategories)
       
-      vis.updateVis();
+      // vis.updateVis();
     }
   
     updateVis() {
@@ -117,11 +118,30 @@ class StreamGraph {
         // vis.genreCountG[yearG[0]] = genreYearG;
         // vis.genreCountG.push([yearG[0], genreYearG]);
         vis.genreCountG.push({...genreYearG, year: yearG[0]});
+        // instead but in list per genre and value?
+        console.log("===== genreYearG =====")
+        console.log(genreYearG)
+        let genreGList = [];
+        vis.config.genreCategories.forEach(g => {
+          let genreG = {
+            genre: g,
+            value: genreYearG[g]
+          }
+          console.log(genreG)
+          genreGList.push(genreG)
+        })
+        console.log(yearG[0])
+        console.log(genreGList)
+        // vis.genreCountG.push([yearG[0], genreGList]);
       })
       console.log("genre count G");
       console.log(vis.genreCountG);
+      vis.genreCountG2 = d3.groups(vis.genreCountG, d => d.year)
+      console.log("genre count G 2")
+      console.log(vis.genreCountG2)
 
       // Stack the data
+      // vis.stack.value((d, key) => {console.log("stack value test"); console.log(d); d[1][0][key]})
       vis.stack.value((d, key) => d[key])
       vis.stackedData = vis.stack(vis.genreCountG);
       // vis.stackedData = d3.stack()
@@ -141,7 +161,8 @@ class StreamGraph {
       // vis.xScale.domain(Array.from({length: nYears[1] - nYears[0] + 1}, (_, i) => i + nYears[0]))
       // vis.xScale.domain(d3.extent(vis.data, d => vis.xValue(d).getFullYear()));
       vis.xScale.domain(d3.extent(vis.data, d => vis.xValue(d)));
-      vis.yScale.domain([-250, 250]);
+      vis.yScale.domain([-150, 150]);
+      // vis.yScale.domain([0, d3.max(vis.stackedData[vis.stackedData.length - 1], d => d[1])])
       vis.colour.domain(vis.config.genreCategories);
 
       vis.renderVis();
@@ -153,12 +174,14 @@ class StreamGraph {
 
       // Area generator
       vis.area = d3.area()
-        // .x(d => console.log(d))
+        // .x(d => console.log`(d))
         // .x(d => vis.xScale(vis.xValue(d)))
         .x((d, i) => vis.xScale(d.data.year))
         .y0(d => vis.yScale(d[0]))
         .y1(d => vis.yScale(d[1]))
-        // .curve(d3.curveMonotoneX);
+        .curve(d3.curveMonotoneX)
+        // .curve(d3.curveBasis)
+        // .curve(d3.curveStepAfter)
 
       vis.mousemove = function(event, d, i) {
         let grp = d.key
