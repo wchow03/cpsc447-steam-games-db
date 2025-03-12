@@ -42,7 +42,9 @@ class StreamGraph {
       
       // Colour
       vis.colour = d3.scaleOrdinal()
-        .range(['#4ECE91', '#56E39F', '#58D6A2', '#59C9A5', '#5A9B81', '#5B6C5D', '#4B4C49', '#3B2C35', '#332631', '#2A1F2D'])
+        .range(['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', 
+          '#7f7f7f', '#bcbd22', '#17becf', '#f7b6d2', '#c49c94', '#ffbb78', '#98df8a', 
+          '#ff9896', '#c7c7c7']);
       
       // Create SVG area
       vis.chartArea = vis.svg.append('g')
@@ -52,13 +54,13 @@ class StreamGraph {
       vis.chart = vis.chartArea.append('g');
 
       vis.xAxis = d3.axisBottom(vis.xScale)
-        .tickSize(-height*0.7)
+        .tickSize(-height*0.8)
         .ticks(24)
         .tickFormat(d3.format("d"));
 
       vis.xAxisG = vis.chart.append('g')
         .attr('class', 'axis x-axis')
-        .attr("transform", `translate(0, ${height * 0.8})`);
+        .attr("transform", `translate(0, ${height * 0.9})`);
 
       vis.stack = d3.stack()
         .offset(d3.stackOffsetSilhouette)
@@ -100,14 +102,20 @@ class StreamGraph {
         })
       })
       vis.genreCountG = genreGList;
+      // Group aggregated data by year
+      vis.genreCountG = d3.groups(vis.genreCountG, d => d.year);
+      // Sort by year
+      vis.genreCountG.sort((a, b) => {
+        return b[0] - a[0];
+      });
 
       // Stack the data
-      vis.stack.value((d, key) => {return d.value})
+      vis.stack.value((d, key) => d[1][[...vis.config.genreCategories].indexOf(key)].value);
       vis.stackedData = vis.stack(vis.genreCountG);
 
       // Set domains
       vis.xScale.domain(d3.extent(vis.data, d => vis.xValue(d)));
-      vis.yScale.domain([-1000, 1000]);
+      vis.yScale.domain([-300, 300]);
       vis.colour.domain(vis.config.genreCategories);
 
       vis.renderVis();
@@ -118,7 +126,7 @@ class StreamGraph {
 
       // Area generator
       vis.area = d3.area()
-        .x((d, i) => vis.xScale(d.data.year))
+        .x((d, i) => vis.xScale(d.data[0]))
         .y0(d => vis.yScale(d[0]))
         .y1(d => vis.yScale(d[1]))
         .curve(d3.curveMonotoneX)
