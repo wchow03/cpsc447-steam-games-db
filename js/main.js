@@ -25,7 +25,9 @@ d3.json('data/steamdb.json').then(originalData => {
         'meta_uscore', 'igdb_single', 'igdb_complete', 'igdb_score', 'igdb_uscore'
     ]
 
-    const data = []
+    const data = [];
+
+    const dispatcher = d3.dispatch('onYearUpdate', 'onSliderUpdate', 'onLanguageUpdate');
 
     // filter unwanted attributes
     originalData.forEach(d => 
@@ -130,13 +132,14 @@ d3.json('data/steamdb.json').then(originalData => {
 
     // Data passed into bar chart will just be the languages and the count for each language
     // let barChart = new BarChart({ parentElement: '#barchart'}, data);
-    let barChart = new BarChart({ parentElement: '#barchart'}, languagesCount);
+    let barChart = new BarChart({ parentElement: '#barchart'}, languagesCount, dispatcher);
     barChart.updateVis();
 
-    let streamGraph = new StreamGraph({ parentElement: '#streamgraph', genreCategories: genres }, data);
+    let streamGraph = new StreamGraph({ parentElement: '#streamgraph', genreCategories: genres }, data,
+        dispatcher);
     streamGraph.updateVis();
 
-    let treeMap = new TreeMap({ parentElement: '.treemap .graph'}, data);
+    let treeMap = new TreeMap({ parentElement: '.treemap .graph'}, data, dispatcher);
 
     document.getElementById("reset-button").addEventListener("click", function() {
         treeMap.filteredData = null;  // Clear filtered data
