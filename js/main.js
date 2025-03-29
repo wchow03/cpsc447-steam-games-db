@@ -191,3 +191,16 @@ const slider = d3.select('#treemap-slider')
         console.log(sliderValues[event.target.value])
     })
 
+
+// Dispatcher events
+dispatcher
+    .on('onSliderUpdate', () => {
+        // handle slider widget event
+    })
+    .on('onYearUpdate', () => {
+        // handle year bidirectional event
+    })
+    .on('onLanguageUpdate', () => {
+        // handle language bidirectional event
+    });
+
