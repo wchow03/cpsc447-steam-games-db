@@ -29,6 +29,8 @@ let selectedBar;
 
 let streamGraph;
 
+let treeMap;
+
 d3.json('data/steamdb_preprocessed.json').then(data => {
 
     // text processing
@@ -133,7 +135,7 @@ d3.json('data/steamdb_preprocessed.json').then(data => {
         dispatcher);
     streamGraph.updateVis();
 
-    let treeMap = new TreeMap({ parentElement: '.treemap .graph'}, data, dispatcher);
+    treeMap = new TreeMap({ parentElement: '.treemap .graph'}, data, dispatcher);
 
     document.getElementById("reset-button").addEventListener("click", function() {
         treeMap.filteredData = null;  // Clear filtered data
