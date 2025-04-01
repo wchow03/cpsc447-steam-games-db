@@ -16,6 +16,7 @@ class StreamGraph {
           left: 20
         },
         genreCategories: _config.genreCategories,
+        tooltipPadding: _config.tooltipPadding || 15,
       }
       this.data = data;
       this.initVis();
@@ -132,13 +133,36 @@ class StreamGraph {
         .curve(d3.curveMonotoneX)
 
       // Render chart
-      vis.chart.selectAll(".area")
+      let stream = vis.chart.selectAll(".area")
         .data(vis.stackedData)
         .join('path')
           .attr('class', 'area')
           .style('fill', d => vis.colour(d.key))
           .attr('d', vis.area)
           .on("mousemove", vis.mousemove)
+
+      stream
+        .on('mouseover', function (event, d) {
+          // Render tooltip
+          d3.select('#s_tooltip')
+          .style('display', 'block')
+          .style('opacity', 1)
+          .style('left', (event.pageX + vis.config.tooltipPadding) + 'px')
+          .style('top', (event.pageY + vis.config.tooltipPadding) + 'px')
+          .html(`
+            <div class='tooltip-info'>${d.key}</div>
+            `)
+        })
+        .on('mousemove', function (event) {
+          d3.select('#s_tooltip')
+            .style('left', (event.pageX + vis.config.tooltipPadding) + 'px')
+            .style('top', (event.pageY + vis.config.tooltipPadding) + 'px')
+        })
+        .on('mouseleave', function (event) {
+          // remove tooltip
+          d3.select('#s_tooltip')
+            .style('display', 'none');
+        });
 
       // Render axis
       vis.xAxisG
