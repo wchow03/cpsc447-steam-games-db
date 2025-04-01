@@ -5,7 +5,7 @@ class BarChart {
      * @param {Object}
      */
     // Todo: Add or remove parameters from the constructor as needed
-    constructor(_config, data) {
+    constructor(_config, data, dispatcher) {
       this.config = {
         parentElement: _config.parentElement,
         // containerWidth: 900,
@@ -21,6 +21,7 @@ class BarChart {
         // Todo: Add or remove attributes from config as needed
       }
       this.data = data;
+      this.dispatcher = dispatcher;
       this.initVis();
     }
   
@@ -35,7 +36,6 @@ class BarChart {
         // Have x-values go from 0 and increasing to the left
         vis.xScale = d3.scaleLinear()
             .range([vis.width, 0]);
-            // .range([0, vis.width]);
     
         vis.yScale = d3.scaleBand()
             .range([0, vis.height])
@@ -56,8 +56,6 @@ class BarChart {
         vis.svg = d3.select(vis.config.parentElement).append('svg')
             .attr('width', vis.config.containerWidth)
             .attr('height', vis.config.containerHeight)
-            // .attr('transform', `translate(${vis.config.containerWidth}, 0)`);
-            // .attr('transform', `translate(${window.innerWidth - vis.config.containerWidth}, 0)`);
         
         // Append group element that will contain actual chart and position according to margins
         vis.chart = vis.svg.append('g')
@@ -79,43 +77,117 @@ class BarChart {
     updateVis() {
         let vis = this;
         console.log(vis.data);
-        // console.log(Object.entries(vis.data)[0][0]);
-        // console.log(Object.entries(vis.data)[0][1]);
-        
-        // console.log(Object.keys(vis.data));
-        // console.log(Object.values(vis.data));
+
+        vis.languages = new Set();
+        vis.languagesCount = {};
+
+        vis.data.forEach(d => {
+            d.languages.forEach(g => {
+                vis.languages.add(g)
+                vis.languagesCount[g] = (languagesCount[g] || 0);
+            });
+        });
 
         // Specify x and y data
+        
+        // xValue is the count
         vis.xValue = d => d[1];
+
+        // yValue is the language
         vis.yValue = d => d[0];
 
         // Set scale for input domains
-        vis.xScale.domain([d3.max(Object.entries(vis.data), vis.xValue), 0]);
+        vis.xScale.domain([d3.max(Object.entries(vis.languagesCount), vis.xValue), 0]);
         
-        vis.yScale.domain(Object.entries(vis.data).map(vis.yValue));
+        vis.yScale.domain(Object.entries(vis.languagesCount).map(vis.yValue));
 
         vis.renderVis();
     }
   
     renderVis() {
         let vis = this;
-        // Todo: Bind data to visual elements, update axes
 
         // Add rectangles
-        vis.chart.selectAll('.bar')
-            .data(Object.entries(vis.data))
-            .enter()
-            .append('rect')
+        const bar = vis.chart.selectAll('.bar')
+            .data(Object.entries(vis.languagesCount))
+            .join('rect')
             .attr('class', 'bar')
             .attr('width', d => Math.ceil(vis.xScale(vis.xValue(d))))
             .attr('height', d => vis.yScale.bandwidth())
             .attr('y', d => vis.yScale(vis.yValue(d)))
-            .attr('x', d => vis.width - vis.xScale(vis.xValue(d)));
+            .attr('x', d => vis.width - vis.xScale(vis.xValue(d)))
+            .attr('fill', 'rgb(151, 42, 42)');
         
-        // Update axes because scales may have changed
+        // Add mouseover and mouse out
+        bar.on('mouseover', function (e, d) {
+            // Add outline on mouse hover
+            d3.select(this)
+                .attr('stroke', 'black')
+                .attr('stroke-width', 2)
+                .style('cursor', 'pointer');
+            
+            // Activate tooltip
+            d3.select('#v_tooltip')
+                .style('opacity', 1)
+                .html(`
+                    <div style="font-weight: bold;" >${vis.xValue(d)}</div>
+                `);
+        })
+        .on('mousemove', function (e) {
+            d3.select('#v_tooltip')
+                .style("left", (e.pageX + 10) + "px")
+                .style("top", (e.pageY - 20) + "px");
+        })
+        .on('mouseleave', function () {
+            // Remove mouse hover outline
+            d3.select(this).attr('stroke', null);
+
+            // Remove tooltip
+            d3.select('#v_tooltip')
+                .style('opacity', 0);
+        });
+
+        // Mouse click on bar chart language
+        bar.on('click', function (e, d) {
+
+            // If a bar has been selected, deselect the selected bar since user has clicked a new bar
+            if (selectedBar) {
+                d3.select(selectedBar)
+                    .attr('fill', 'rgb(151, 42, 42)');
+            }
+
+            // Change colour of selected bar
+            d3.select(this)
+            .attr('fill', 'rgb(102, 250, 17)');
+
+            // Filter data to only contain selected language
+            const selectedLanguage = d[0];
+            selectedBar = this;
+
+            // Call dispatcher with selected language
+            vis.dispatcher.call('onLanguageUpdate', e, selectedLanguage);
+
+            
+        });
+
+        // Create click area for bar chart (used to reset selected language)
+        vis.chart.insert('rect', ':first-child')
+            .attr('width', vis.width)
+            .attr('height', vis.height)
+            .attr('fill', '#252525')
+            .on('click', function (e) {
+                if (!d3.select(e.target).classed('bar')) {
+                    // console.log("EMPTY SPACE");
+
+                    // Call dispatcher will null to reset all selected data
+                    vis.dispatcher.call('onLanguageUpdate', e, null);
+
+                    // Call update vis again to reset the selected bar
+                    vis.updateVis();
+                }
+        });
 
         // Do not render the x-axis
-        // vis.xAxisG.call(vis.xAxis);
         vis.yAxisG.call(vis.yAxis);
 
     }

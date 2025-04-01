@@ -16,11 +16,22 @@ let categories = new Set();
 let categoriesCount = {};
 let difficulty = new Set();
 let difficultyCount = {};
+const dispatcher = d3.dispatch('onYearUpdate', 'onSliderUpdate', 'onLanguageUpdate');
 
+// Store async data as global variable to be used later
+let globalData;
+
+// Bar Chart
+let barChart;
+
+// selectedBar to ensure only one bar can be highlighted at a time
+let selectedBar;
+
+let streamGraph;
+
+let treeMap;
 
 d3.json('data/steamdb_preprocessed.json').then(data => {
-
-    const dispatcher = d3.dispatch('onYearUpdate', 'onSliderUpdate', 'onLanguageUpdate');
 
     // text processing
     data.forEach(d => {
@@ -113,16 +124,18 @@ d3.json('data/steamdb_preprocessed.json').then(data => {
     // console.log(difficultyCount)
     // --------------
 
+    globalData = data;
+
     // Data passed into bar chart will just be the languages and the count for each language
     // let barChart = new BarChart({ parentElement: '#barchart'}, data);
-    let barChart = new BarChart({ parentElement: '#barchart'}, languagesCount, dispatcher);
+    barChart = new BarChart({ parentElement: '#barchart'}, data, dispatcher);
     barChart.updateVis();
 
-    let streamGraph = new StreamGraph({ parentElement: '#streamgraph', genreCategories: genres }, data,
+    streamGraph = new StreamGraph({ parentElement: '#streamgraph', genreCategories: genres }, data,
         dispatcher);
     streamGraph.updateVis();
 
-    let treeMap = new TreeMap({ parentElement: '.treemap .graph'}, data, dispatcher);
+    treeMap = new TreeMap({ parentElement: '.treemap .graph'}, data, dispatcher);
 
     document.getElementById("reset-button").addEventListener("click", function() {
         treeMap.filteredData = null;  // Clear filtered data
@@ -183,7 +196,22 @@ dispatcher
     .on('onYearUpdate', () => {
         // handle year bidirectional event
     })
-    .on('onLanguageUpdate', () => {
+    .on('onLanguageUpdate', selectedLanguage => {
         // handle language bidirectional event
+
+        // If a language was selected, filter data that contain selected language
+        // Otherwise, empty space was clicked so reset all selected data
+        if (selectedLanguage) {
+            // Filter data to be only the selected language
+            let filtered_language_data = globalData.filter(d => d.languages.includes(selectedLanguage));
+            console.log("Filtered language data length: ", filtered_language_data.length);
+            streamGraph.data = filtered_language_data;
+        } else {
+            streamGraph.data = globalData;
+        }
+        
+        // Update visualization
+        streamGraph.updateVis();
+        
     });
 
