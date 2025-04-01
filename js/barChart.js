@@ -157,12 +157,31 @@ class BarChart {
             }
 
             // Change colour of selected bar
-            d3.select(this)
-            .attr('fill', 'rgb(102, 250, 17)');
+            if (!selectedBar || selectedBar != this) {
+                d3.select(this)
+                    .attr('fill', 'rgb(102, 250, 17)');
+            }
 
             // Filter data to only contain selected language
-            const selectedLanguage = d[0];
-            selectedBar = this;
+            let selectedLanguage = d[0];
+            
+            // If the current selected bar is clicked again to be deselected, perform same the function 
+            // that clicking on an empty space in bar char does (clears all selected data)
+            
+            // Otherwise update the selected bar to the new bar and filter on selected language
+
+            if (selectedBar === this) {
+                selectedLanguage = null;
+                selectedBar = null;
+
+                // Call dispatcher will null to reset all selected data
+                vis.dispatcher.call('onLanguageUpdate', e, null);
+
+                // Call update vis again to reset the selected bar
+                vis.updateVis();
+            } else {
+                selectedBar = this;
+            }
 
             // Call dispatcher with selected language
             vis.dispatcher.call('onLanguageUpdate', e, selectedLanguage);
@@ -178,6 +197,7 @@ class BarChart {
             .on('click', function (e) {
                 if (!d3.select(e.target).classed('bar')) {
                     // console.log("EMPTY SPACE");
+                    selectedBar = null;
 
                     // Call dispatcher will null to reset all selected data
                     vis.dispatcher.call('onLanguageUpdate', e, null);
