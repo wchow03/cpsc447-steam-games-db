@@ -128,19 +128,26 @@ d3.json('data/steamdb_preprocessed.json').then(data => {
 
     // Data passed into bar chart will just be the languages and the count for each language
     // let barChart = new BarChart({ parentElement: '#barchart'}, data);
-    barChart = new BarChart({ parentElement: '#barchart'}, data, dispatcher);
+    barChart = new BarChart({ parentElement: '.barchart>.graph'}, data, dispatcher);
     barChart.updateVis();
 
-    streamGraph = new StreamGraph({ parentElement: '#streamgraph', genreCategories: genres }, data,
+    streamGraph = new StreamGraph({ parentElement: '.streamgraph>.graph', genreCategories: genres }, data,
         dispatcher);
     streamGraph.updateVis();
 
     treeMap = new TreeMap({ parentElement: '.treemap .graph'}, data, dispatcher);
 
     document.getElementById("reset-button").addEventListener("click", function() {
-        treeMap.filteredData = null;  // Clear filtered data
-        treeMap.updateVis();  // Re-render with full dataset
-        this.style.display = "none";  // Hide reset button again
+        d3.select("#loading-spinner").style('opacity', '100%') // show loading spinner
+
+        // timeout forces the loading spinner to show up first
+        setTimeout(() => {
+            treeMap.filteredData = null;  // Clear filtered data
+            treeMap.updateVis();  // Re-render with full dataset
+            this.classList.remove("active");  // Hide reset button again
+            this.classList.add("disabled");  // Hide reset button again
+            d3.select("#loading-spinner").style('opacity', '0%') // hide loading spinner
+        }, 2000)
     });
   
     // let bubbleChart = new BubbleChart({ parentElement: '.bubblechart .graph'}, data);
@@ -179,12 +186,59 @@ d3.select('#treemap-slider').append('div')
 const slider = d3.select('#treemap-slider')
     .append('input')
     .attr('type', 'range')
-    .attr('min', 1)
-    .attr('max', sliderValues.length)
+    .attr('min', 0)
+    .attr('max', sliderValues.length - 1)
     .attr('class', 'form-range')
     .on('input', (event) => {
         // TODO update onchange later -- currently prints out new value
         console.log(sliderValues[event.target.value])
+    })
+
+// general helper tooltips
+
+d3.select("#treemap-question")
+    .on('mouseover', (event, d) => {
+        d3.select("#v_tooltip")
+            .style("opacity", 1)
+            .html(`This graph does this.....`);
+    }).on("mousemove", (event) => {
+        d3.select("#v_tooltip")
+            .style("left", (event.pageX + 10) + "px")
+            .style("top", (event.pageY - 20) + "px");
+    }).on('mouseout', (event, d) => {
+        d3.select("#v_tooltip")
+            .style("opacity", 0);
+        d3.select(event.target)
+    })
+
+d3.select("#streamgraph-question")
+    .on('mouseover', (event, d) => {
+        d3.select("#v_tooltip")
+            .style("opacity", 1)
+            .html(`This graph does this.....`);
+    }).on("mousemove", (event) => {
+        d3.select("#v_tooltip")
+            .style("left", (event.pageX + 10) + "px")
+            .style("top", (event.pageY - 20) + "px");
+    }).on('mouseout', (event, d) => {
+        d3.select("#v_tooltip")
+            .style("opacity", 0);
+        d3.select(event.target)
+    })
+
+d3.select("#barchart-question")
+    .on('mouseover', (event, d) => {
+        d3.select("#v_tooltip")
+            .style("opacity", 1)
+            .html(`This graph does this.....`);
+    }).on("mousemove", (event) => {
+        d3.select("#v_tooltip")
+            .style("left", (event.pageX - 180) + "px") // update
+            .style("top", (event.pageY - 20) + "px");
+    }).on('mouseout', (event, d) => {
+        d3.select("#v_tooltip")
+            .style("opacity", 0);
+        d3.select(event.target)
     })
 
 

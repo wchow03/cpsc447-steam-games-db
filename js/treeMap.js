@@ -8,13 +8,13 @@ class TreeMap {
     constructor(_config, data) {
         this.config = {
             parentElement: _config.parentElement,
-            containerWidth: 500,
-            containerHeight: 500,
+            containerWidth: 700,
+            containerHeight: 300,
             margin: {
-                top: 30,
+                top: 5,
                 right: 5,
-                bottom: 20,
-                left: 30
+                bottom: 5,
+                left: 5
             }
             // Todo: Add or remove attributes from config as needed
         }
@@ -73,8 +73,8 @@ class TreeMap {
 
         // Append color circles
         legend.append('div')
-            .style('width', '15px')
-            .style('height', '15px')
+            .style('width', '12px')
+            .style('height', '12px')
             .style('border-radius', '50%')
             .style('margin-right', '8px')
             .style('background-color', d => vis.colorScale(d));
@@ -134,7 +134,8 @@ class TreeMap {
                 console.log(`Filtering for difficulty: ${d.data.gfq_difficulty}`);
                 vis.filteredData = vis.data.filter(item => item.gfq_difficulty === d.data.gfq_difficulty);
                 vis.updateVis();
-                d3.select("#reset-button").style("display", "block"); // Show reset button
+                d3.select("#reset-button").classed("active", true); // set reset button active
+                d3.select("#reset-button").classed("disabled", false); // set reset button not disabled
             });
     }
 }

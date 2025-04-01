@@ -7,12 +7,12 @@ class StreamGraph {
     constructor(_config, data) {
       this.config = {
         parentElement: _config.parentElement,
-        containerWidth: 750,
-        containerHeight: 260,
+        containerWidth: 700,
+        containerHeight: 225,
         margin: {
-          top: 20,
+          top: 0,
           right: 20,
-          bottom: 20,
+          bottom: 0,
           left: 20
         },
         genreCategories: _config.genreCategories,

@@ -1,46 +1,134 @@
+/* The project is designed to be optimal on a screen size of 1536 x 725 and is supported on the
+Chrome browser. */
+
 /* intro segment */
 
-.body {
+body {
     /* TODO: update font later */
-    font-family: 'monospace', Arial, sans-serif;
+    font-family: "Motiva Sans", Arial, Helvetica, sans-serif;
+    /* background-color: #1b2838; */
+    background: linear-gradient(to bottom right, #1c4453, #1b2838); 
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    height: 100%;
+    color: #c7d5e0;
+    margin: 0;
 }
 .intro-segment {
-    padding: 20px;
-    width: 25%;
+    h1 {
+        background-color: #171a21;
+        padding: 23px 0 23px 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+        width: inherit;
+        .bi-controller {
+            width: 30px;
+            height: 30px;
+            /* margin-left: 10px; */
+        }
+        #steam-games-title {
+            font-weight: 600;
+            font-size: 20px;
+            margin: 0 10px 0 20px;
+        }
+        .group-members-text {
+            font-weight: 600;
+            font-size: 12px;
+            margin: 0 5px 0 10px;
+        }
+        .group-members-title {
+            color: #2597da;
+            display: inline-block; 
+            position: relative;
+        }
+        .group-members-title::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -3px;
+            width: 100%;
+            height: 3px; 
+            background-color: #2597da;
+            border-radius: 50px; 
+        }
+    }
+    /* padding: 20px; */
+    .description {
+        width: 375px;
+        padding: 20px;
+        margin: 15px 0px 0px 20px;
+        font-size: 15px;
+        background: linear-gradient(to bottom right, rgba(26, 24, 33, 0.3), rgba(7, 7, 10, 0.4));
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+    }
+    /* width: 25%; */
 }
 
-/* treemap slider */
+/* treemap */
 .treemap {
     .slider{
-        width: 500px;
+        width: 700px;
         /* TODO update position */
         position: absolute;
-        top: 8%;
-        left: 30%;
+        top: 95px;
+        left: 415px;
+        /* from referencign steam site */
+        background: linear-gradient(90deg, #36618c 11.38%, #2f6387 25.23%, #192554 100%);
+        padding: 10px 0px 5px 0px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+        .form-range::-webkit-slider-runnable-track {
+            height: 8px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            /* appearance: none; */
+            width: 16px;
+            height: 16px;
+            background: #66c0f4; 
+            /* border: 2px solid #66c0f4; */
+        }
     }
-    .legend {
-        position: absolute;
-        top: 50%;
-        left: 5%;
-        display: flex;
-        flex-wrap: wrap; /* Allows wrapping if there are many items */
-        align-items: center;
-        /* justify-content: center; Centers the legend items */
-        justify-content: left;
-        gap: 10px; /* Adds spacing between legend items */
-        margin-top: 10px;
-        width: 400px;
+    .description {
+        background: linear-gradient(to bottom right, rgba(26, 24, 33, 0.3), rgba(7, 7, 10, 0.4));
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+        padding: 15px 20px 15px 20px;
+        margin-top: 7px;
+        width: 375px;
+        height: 160px;
+        margin-left: 20px;
+        position: relative;
+        .legend {
+            display: flex;
+            flex-wrap: wrap; /* Allows wrapping if there are many items */
+            align-items: center;
+            justify-content: left;
+            gap: 10px; /* Adds spacing between legend items */
+            padding-top: 10px;
+    
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            font-size: 13px;
+        }
+    
+        .title {
+            padding-bottom: 5px;
+        }
 
-    }
-    .legend-item {
-        display: flex;
-        align-items: center;
+        .bi-question-circle-fill {
+            position: absolute;
+            left: 340px;
+            top: 20px;
+        }
     }
 
     .graph {
         position: absolute;
-        top: 12%;
-        left: 30%;
+        top: 175px;
+        left: 415px;
+        
     }
 }
 
@@ -64,83 +152,121 @@
 
 .tooltip {
     position: absolute;
-    background-color: rgba(0, 0, 0, 0.8);
-    color: white;
+    background-color: rgb(234, 232, 232);
+    color: black;
     padding: 8px;
     border-radius: 5px;
     font-size: 14px;
     pointer-events: none; /* Prevents interfering with mouse events */
     transition: opacity 0.2s ease-in-out;
-}
-
-/* bubble chart */
-
-.bubblechart {
-    .legend {
-        position: absolute;
-        top: 50%;
-        left: 5%;
-        display: flex;
-        flex-wrap: wrap; /* Allows wrapping if there are many items */
-        align-items: center;
-        /* justify-content: center; Centers the legend items */
-        justify-content: left;
-        gap: 10px; /* Adds spacing between legend items */
-        margin-top: 10px;
-        width: 400px;
-    
-    }
-    .legend-item {
-        display: flex;
-        align-items: center;
-    }
-
-    .graph {
-        position: absolute;
-        top: 12%;
-        left: 30%;
-    }   
-
+    font-family: "Motiva Sans", Arial, Helvetica, sans-serif;
 }
 
 #reset-button {
     position: absolute;
-    top: 0;
-    left: 45%;
-    display: flex;
-    background-color: #007bff;
+    top: 25px;
+    right: 20px;
+    background-color: #56740e;
     color: white;
-    border: none;
-    padding: 8px 12px;
-    cursor: pointer;
-    font-size: 14px;
-    border-radius: 5px;
+    border-color: #56740e;
+    font-family: "Motiva Sans", Arial, Helvetica, sans-serif;
 }
 
-#reset-button:hover {
-    background-color: #0056b3;
+#reset-button.active:hover {
+    background-color: #7b9f25;
+}
+
+#reset-button.active {
+    color: white;
+    background-color: #5c7e0f;
+}
+
+#loading-spinner {
+    position: absolute;
+    top: 25px;
+    right: 200px;
+    opacity: 0;
 }
 
 /* bar chart */
 
 .barchart {
     position: absolute;
-    top: 5%;
-    left: 65%;
+    top: 95px;
+    left: 1135px;
+    padding: 10px;
+    background: linear-gradient(to bottom right, rgba(26, 24, 33, 0.3), rgba(7, 7, 10, 0.4));
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
     .bar {
-        /* fill:rgb(151, 42, 42); */
+        /* fill:#66c0f4; */
         shape-rendering: crispEdges;
     }
     
     .bar-chart-y-axis text {
         font-weight: bold;
+        font-size: 13px;
+        font-family: "Motiva Sans", Arial, Helvetica, sans-serif;
+        letter-spacing: 0.5px;
+    }
+
+    .title {
+        width: 100%;
+        text-align: center;
+        padding-bottom: 10px;
         font-size: 18px;
+        font-weight: bold;
+    }
+
+    .bi-question-circle-fill {
+        position: absolute;
+        left: 340px;
+        top: 15px;
     }
 }
 
 /* streamgraph */
 .streamgraph {
+    /* background: linear-gradient(to bottom right, rgba(26, 24, 33, 0.3), rgba(7, 7, 10, 0.4)); */
     position: absolute;
-    top: 70%;
-    left: 3%;
+    /* margin: 10px;
+    padding: 10px; */
+    top: 485px;
+    /* width: 1100px; */
+    /* left: 410px; */
+
+    .graph {
+        position: absolute;
+
+        left: 413px;
+        padding: 3px;
+        background: linear-gradient(to bottom right, rgba(26, 24, 33, 0.3), rgba(7, 7, 10, 0.4));
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+    }
+
+    .description {
+        background: linear-gradient(to bottom right, rgba(26, 24, 33, 0.3), rgba(7, 7, 10, 0.4));
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+        padding: 10px;
+        position: absolute;
+        width: 375px;
+        margin-left: 20px;
+        height: 225px;
+
+        .title {
+            width: 375px;
+            padding: 10px;
+            top: 50px;
+        }
+    
+        .legend {
+            top: 100px;
+            padding: 10px;
+        }
+
+        .bi-question-circle-fill {
+            position: absolute;
+            left: 340px;
+            top: 20px;
+        }
+    }
 }

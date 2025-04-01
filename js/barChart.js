@@ -10,13 +10,18 @@ class BarChart {
         parentElement: _config.parentElement,
         // containerWidth: 900,
         // containerHeight: 700,
-        containerWidth: 600,
-        containerHeight: 750,
+        containerWidth: 350,
+        // containerHeight: 750,
+        containerHeight: 550,
         margin: {
-          top: 30,
-          right: 300,
-          bottom: 20,
-          left: 30
+        //   top: 10,
+        //   right: 250,
+        //   bottom: 20,
+        //   left: 10
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0
         }
         // Todo: Add or remove attributes from config as needed
       }
@@ -35,7 +40,8 @@ class BarChart {
         // Initialize scales
         // Have x-values go from 0 and increasing to the left
         vis.xScale = d3.scaleLinear()
-            .range([vis.width, 0]);
+            .range([vis.width / 2, 0]);
+            // .range([0, vis.width]);
     
         vis.yScale = d3.scaleBand()
             .range([0, vis.height])
@@ -50,6 +56,7 @@ class BarChart {
             .ticks(Object.keys(this.data).length)
             .tickSizeInner(0)
             .tickSizeOuter(0)
+            .tickPadding(5)
             .tickFormat(d => d)
         
         // Define size of SVG drawing area
@@ -59,7 +66,7 @@ class BarChart {
         
         // Append group element that will contain actual chart and position according to margins
         vis.chart = vis.svg.append('g')
-            .attr('transform', `translate(${vis.config.margin.left}, ${vis.config.margin.top})`);
+            .attr('transform', `translate(${vis.config.margin.left + 10}, ${vis.config.margin.top})`);
 
         // Append empty x-axis group and move to bottom of chart
         vis.xAxisG = vis.chart.append('g')
@@ -69,7 +76,7 @@ class BarChart {
         // Append y-axis group
         vis.yAxisG = vis.chart.append('g')
             .attr('class', 'bar-axis bar-chart-y-axis')
-            .attr('transform', `translate(${vis.width}, 0)`);
+            .attr('transform', `translate(${vis.width / 2}, 0)`);
         
         
     }
@@ -115,14 +122,14 @@ class BarChart {
             .attr('width', d => Math.ceil(vis.xScale(vis.xValue(d))))
             .attr('height', d => vis.yScale.bandwidth())
             .attr('y', d => vis.yScale(vis.yValue(d)))
-            .attr('x', d => vis.width - vis.xScale(vis.xValue(d)))
-            .attr('fill', 'rgb(151, 42, 42)');
+            .attr('x', d => vis.width/2 - vis.xScale(vis.xValue(d)))
+            .attr('fill', '#66c0f4');
         
         // Add mouseover and mouse out
         bar.on('mouseover', function (e, d) {
             // Add outline on mouse hover
             d3.select(this)
-                .attr('stroke', 'black')
+                .attr('stroke', 'white')
                 .attr('stroke-width', 2)
                 .style('cursor', 'pointer');
             
@@ -153,12 +160,12 @@ class BarChart {
             // If a bar has been selected, deselect the selected bar since user has clicked a new bar
             if (selectedBar) {
                 d3.select(selectedBar)
-                    .attr('fill', 'rgb(151, 42, 42)');
+                    .attr('fill', '#66c0f4');
             }
 
             // Change colour of selected bar
             d3.select(this)
-            .attr('fill', 'rgb(102, 250, 17)');
+            .attr('fill', '#a5d92b');
 
             // Filter data to only contain selected language
             const selectedLanguage = d[0];
@@ -174,7 +181,7 @@ class BarChart {
         vis.chart.insert('rect', ':first-child')
             .attr('width', vis.width)
             .attr('height', vis.height)
-            .attr('fill', '#252525')
+            .attr('opacity', '0%')
             .on('click', function (e) {
                 if (!d3.select(e.target).classed('bar')) {
                     // console.log("EMPTY SPACE");
