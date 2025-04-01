@@ -264,13 +264,14 @@ body {
             display: flex;
             flex-direction: column;
             flex-wrap: wrap;
-            /* width: 600px; */
-            height: 225px;
+            width: 375px;
+            height: 180px;
 
             .legend-item {
                 display: flex;
                 align-items: center;
                 gap: 10px;
+                font-size: 13px;
             }
         }
 

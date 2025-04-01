@@ -70,12 +70,12 @@ class StreamGraph {
         .offset(d3.stackOffsetSilhouette)
         .keys(vis.config.genreCategories)
 
+      // Legend
       vis.legend = d3.select('#streamgraph .legend')
     }
   
     updateVis() {
       let vis = this;
-      // Todo: Prepare data and scales
 
       vis.xValue = d => d.published_store.getFullYear();
       vis.yValue = d => d.genres
@@ -157,14 +157,12 @@ class StreamGraph {
           
           div.append('div')
             .attr('class', 'circle')
-            .style('width', '15px')
-            .style('height', '15px')
-            .style('border-radius', '15px')
+            .style('width', '12px')
+            .style('height', '12px')
+            .style('border-radius', '12px')
             .style('background-color', d => vis.colour(d))
 
           div.append('div')
-            .style('font-size', 12)
-            .style('color', 'black')
             .text(d => d)
         });
 
