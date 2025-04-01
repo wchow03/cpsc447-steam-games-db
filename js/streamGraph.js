@@ -155,6 +155,7 @@ class StreamGraph {
               return `translate(10, ${i * 20})`
             })
           
+          // genre colour indicator
           div.append('div')
             .attr('class', 'circle')
             .style('width', '12px')
@@ -162,7 +163,9 @@ class StreamGraph {
             .style('border-radius', '12px')
             .style('background-color', d => vis.colour(d))
 
+          // genre label
           div.append('div')
+            .attr('class', 'genre')
             .text(d => d)
         });
 
@@ -179,6 +182,7 @@ class StreamGraph {
             `)
         })
         .on('mousemove', function (event) {
+          // Move tooltip with mouse
           d3.select('#s_tooltip')
             .style('left', (event.pageX + vis.config.tooltipPadding) + 'px')
             .style('top', (event.pageY + vis.config.tooltipPadding) + 'px')
