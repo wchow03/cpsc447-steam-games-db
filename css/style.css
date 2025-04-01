@@ -261,6 +261,17 @@ body {
         .legend {
             top: 100px;
             padding: 10px;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            /* width: 600px; */
+            height: 225px;
+
+            .legend-item {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
         }
 
         .bi-question-circle-fill {
