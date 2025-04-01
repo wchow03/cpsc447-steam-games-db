@@ -17,6 +17,9 @@ class StreamGraph {
         },
         genreCategories: _config.genreCategories,
         tooltipPadding: _config.tooltipPadding || 15,
+        legendWidth: 400,
+        legendHeight: 400,
+        legendRadius: 5,
       }
       this.data = data;
       this.initVis();
@@ -66,11 +69,13 @@ class StreamGraph {
       vis.stack = d3.stack()
         .offset(d3.stackOffsetSilhouette)
         .keys(vis.config.genreCategories)
+
+      // Legend
+      vis.legend = d3.select('#streamgraph .legend')
     }
   
     updateVis() {
       let vis = this;
-      // Todo: Prepare data and scales
 
       vis.xValue = d => d.published_store.getFullYear();
       vis.yValue = d => d.genres
@@ -139,7 +144,30 @@ class StreamGraph {
           .attr('class', 'area')
           .style('fill', d => vis.colour(d.key))
           .attr('d', vis.area)
-          .on("mousemove", vis.mousemove)
+
+      // Render Legend
+      vis.legend.selectAll('.legend-item')
+        .data(vis.config.genreCategories)
+        .join((enter) => {
+          let div = enter.append('div')
+            .attr('class', 'legend-item')
+            .attr('transform', (d, i) => {
+              return `translate(10, ${i * 20})`
+            })
+          
+          // genre colour indicator
+          div.append('div')
+            .attr('class', 'circle')
+            .style('width', '12px')
+            .style('height', '12px')
+            .style('border-radius', '12px')
+            .style('background-color', d => vis.colour(d))
+
+          // genre label
+          div.append('div')
+            .attr('class', 'genre')
+            .text(d => d)
+        });
 
       stream
         .on('mouseover', function (event, d) {
@@ -154,6 +182,7 @@ class StreamGraph {
             `)
         })
         .on('mousemove', function (event) {
+          // Move tooltip with mouse
           d3.select('#s_tooltip')
             .style('left', (event.pageX + vis.config.tooltipPadding) + 'px')
             .style('top', (event.pageY + vis.config.tooltipPadding) + 'px')
