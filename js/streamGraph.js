@@ -16,6 +16,9 @@ class StreamGraph {
           left: 20
         },
         genreCategories: _config.genreCategories,
+        legendWidth: 400,
+        legendHeight: 400,
+        legendRadius: 5,
       }
       this.data = data;
       this.initVis();
@@ -65,6 +68,8 @@ class StreamGraph {
       vis.stack = d3.stack()
         .offset(d3.stackOffsetSilhouette)
         .keys(vis.config.genreCategories)
+
+      vis.legend = d3.select('#streamgraph .legend')
     }
   
     updateVis() {
@@ -138,7 +143,29 @@ class StreamGraph {
           .attr('class', 'area')
           .style('fill', d => vis.colour(d.key))
           .attr('d', vis.area)
-          .on("mousemove", vis.mousemove)
+
+      // Render Legend
+      vis.legend.selectAll('.legend-item')
+        .data(vis.config.genreCategories)
+        .join((enter) => {
+          let div = enter.append('div')
+            .attr('class', 'legend-item')
+            .attr('transform', (d, i) => {
+              return `translate(10, ${i * 20})`
+            })
+          
+          div.append('div')
+            .attr('class', 'circle')
+            .style('width', '15px')
+            .style('height', '15px')
+            .style('border-radius', '15px')
+            .style('background-color', d => vis.colour(d))
+
+          div.append('div')
+            .style('font-size', 12)
+            .style('color', 'black')
+            .text(d => d)
+        })
 
       // Render axis
       vis.xAxisG

@@ -143,4 +143,18 @@
     position: absolute;
     top: 70%;
     left: 3%;
+
+    .legend {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        width: 600px;
+        height: 100px;
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    }
 }
