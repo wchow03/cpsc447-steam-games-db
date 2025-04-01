@@ -7,15 +7,19 @@ class StreamGraph {
     constructor(_config, data) {
       this.config = {
         parentElement: _config.parentElement,
-        containerWidth: 750,
-        containerHeight: 260,
+        containerWidth: 700,
+        containerHeight: 225,
         margin: {
-          top: 20,
+          top: 0,
           right: 20,
-          bottom: 20,
+          bottom: 0,
           left: 20
         },
         genreCategories: _config.genreCategories,
+        tooltipPadding: _config.tooltipPadding || 15,
+        legendWidth: 400,
+        legendHeight: 400,
+        legendRadius: 5,
       }
       this.data = data;
       this.initVis();
@@ -65,11 +69,13 @@ class StreamGraph {
       vis.stack = d3.stack()
         .offset(d3.stackOffsetSilhouette)
         .keys(vis.config.genreCategories)
+
+      // Legend
+      vis.legend = d3.select('#streamgraph .legend')
     }
   
     updateVis() {
       let vis = this;
-      // Todo: Prepare data and scales
 
       vis.xValue = d => d.published_store.getFullYear();
       vis.yValue = d => d.genres
@@ -132,13 +138,60 @@ class StreamGraph {
         .curve(d3.curveMonotoneX)
 
       // Render chart
-      vis.chart.selectAll(".area")
+      let stream = vis.chart.selectAll(".area")
         .data(vis.stackedData)
         .join('path')
           .attr('class', 'area')
           .style('fill', d => vis.colour(d.key))
           .attr('d', vis.area)
-          .on("mousemove", vis.mousemove)
+
+      // Render Legend
+      vis.legend.selectAll('.legend-item')
+        .data(vis.config.genreCategories)
+        .join((enter) => {
+          let div = enter.append('div')
+            .attr('class', 'legend-item')
+            .attr('transform', (d, i) => {
+              return `translate(10, ${i * 20})`
+            })
+          
+          // genre colour indicator
+          div.append('div')
+            .attr('class', 'circle')
+            .style('width', '12px')
+            .style('height', '12px')
+            .style('border-radius', '12px')
+            .style('background-color', d => vis.colour(d))
+
+          // genre label
+          div.append('div')
+            .attr('class', 'genre')
+            .text(d => d)
+        });
+
+      stream
+        .on('mouseover', function (event, d) {
+          // Render tooltip
+          d3.select('#s_tooltip')
+          .style('display', 'block')
+          .style('opacity', 1)
+          .style('left', (event.pageX + vis.config.tooltipPadding) + 'px')
+          .style('top', (event.pageY + vis.config.tooltipPadding) + 'px')
+          .html(`
+            <div class='tooltip-info'>${d.key}</div>
+            `)
+        })
+        .on('mousemove', function (event) {
+          // Move tooltip with mouse
+          d3.select('#s_tooltip')
+            .style('left', (event.pageX + vis.config.tooltipPadding) + 'px')
+            .style('top', (event.pageY + vis.config.tooltipPadding) + 'px')
+        })
+        .on('mouseleave', function (event) {
+          // remove tooltip
+          d3.select('#s_tooltip')
+            .style('display', 'none');
+        });
 
       // Render axis
       vis.xAxisG
