@@ -199,15 +199,15 @@ class StreamGraph {
         .call(vis.xAxis)
         .call(g => g.select('.domain').remove());
 
-      // vis.xAxisG
-      vis.chart.selectAll('.tick text')
+      // Filter for year on bar chart interaction
+      vis.chart.selectAll('.tick')
         .on('click', function (event, d) {
           // Check if is active
           const isActive = d3.select(this).classed('active');
-          vis.chart.selectAll('.tick text').classed('active', g => g == d ? !isActive : false);
+          vis.chart.selectAll('.tick').classed('active', g => g == d ? !isActive : false);
 
           // Get all active genres
-          const selectedYears = vis.chart.selectAll('.tick text.active').data();
+          const selectedYears = vis.chart.selectAll('.tick.active').data();
           
           // Trigger filter event
           vis.dispatcher.call('onYearUpdate', event, selectedYears);

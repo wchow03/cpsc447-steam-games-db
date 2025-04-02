@@ -83,6 +83,7 @@ class BarChart {
   
     updateVis() {
         let vis = this;
+        console.log("bar chart data:");
         console.log(vis.data);
 
         vis.languages = new Set();
@@ -91,9 +92,12 @@ class BarChart {
         vis.data.forEach(d => {
             d.languages.forEach(g => {
                 vis.languages.add(g)
-                vis.languagesCount[g] = (languagesCount[g] || 0);
+                vis.languagesCount[g] = (vis.languagesCount[g] + 1) || 1;
             });
         });
+
+        console.log("languages: ", vis.languages);
+        console.log("languagesCount: ", vis.languagesCount);
 
         // Specify x and y data
         

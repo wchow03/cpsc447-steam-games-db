@@ -281,4 +281,17 @@ body {
             top: 20px;
         }
     }
+
+    .tick {
+        cursor: pointer;
+    }
+
+    .tick:hover,
+    .tick.active:hover {
+        color: #2597da;
+    }
+
+    .tick.active {
+        color: #a5d92b;
+    }
 }
