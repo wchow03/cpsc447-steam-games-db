@@ -160,48 +160,40 @@ class BarChart {
 
         // Mouse click on bar chart language
         bar.on('click', function (e, d) {
-            // Check if is active
-            const isActive = d3.select(this).classed('active');
-            vis.chart.selectAll('.bar').classed('active', g => g == d ? !isActive : false);
+            // If a bar has been selected, deselect the selected bar since user has clicked a new bar
+            if (selectedBar) {
+                d3.select(selectedBar)
+                    .classed('active', false)
+                    .attr('fill', '#66c0f4');
+            }
 
-            // Get all active languages
-            const selectedLanguage = vis.chart.selectAll('.bar.active').data().map(k => k[0]);
+            // Change colour of selected bar
+            if (!selectedBar || selectedBar != this) {
+                d3.select(this)
+                    .classed('active', true)
+                    .attr('fill', '#a5d92b');
+            }
+
+            // Filter data to only contain selected language
+            let selectedLanguage = d[0];
             
-            // // Trigger filter event
-            // vis.dispatcher.call('onYearUpdate', event, selectedYears);
-
-            // // If a bar has been selected, deselect the selected bar since user has clicked a new bar
-            // if (selectedBar) {
-            //     d3.select(selectedBar)
-            //         .attr('fill', '#66c0f4');
-            // }
-
-            // // Change colour of selected bar
-            // if (!selectedBar || selectedBar != this) {
-            //     d3.select(this)
-            //         .attr('fill', '#a5d92b');
-            // }
-
-            // // Filter data to only contain selected language
-            // let selectedLanguage = d[0];
+            // If the current selected bar is clicked again to be deselected, perform same the function 
+            // that clicking on an empty space in bar char does (clears all selected data)
             
-            // // If the current selected bar is clicked again to be deselected, perform same the function 
-            // // that clicking on an empty space in bar char does (clears all selected data)
-            
-            // // Otherwise update the selected bar to the new bar and filter on selected language
+            // Otherwise update the selected bar to the new bar and filter on selected language
 
-            // if (selectedBar === this) {
-            //     selectedLanguage = null;
-            //     selectedBar = null;
+            if (selectedBar === this) {
+                selectedLanguage = null;
+                selectedBar = null;
 
-            //     // Call dispatcher will null to reset all selected data
-            //     vis.dispatcher.call('onLanguageUpdate', e, null);
+                // Call dispatcher will null to reset all selected data
+                vis.dispatcher.call('onLanguageUpdate', e, null);
 
-            //     // Call update vis again to reset the selected bar
-            //     vis.updateVis();
-            // } else {
-            //     selectedBar = this;
-            // }
+                // Call update vis again to reset the selected bar
+                vis.updateVis();
+            } else {
+                selectedBar = this;
+            }
 
             // Call dispatcher with selected language
             vis.dispatcher.call('onLanguageUpdate', e, selectedLanguage);

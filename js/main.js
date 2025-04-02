@@ -273,7 +273,7 @@ dispatcher
         console.log("selected lang: ", selectedLanguage)
         if (selectedLanguage) {
             // Filter data to be only the selected language
-            let filtered_language_data = globalData.filter(d => d.languages.includes(selectedLanguage[0]));
+            let filtered_language_data = globalData.filter(d => d.languages.includes(selectedLanguage));
             console.log("Filtered language data length: ", filtered_language_data.length);
             streamGraph.data = filtered_language_data;
         } else {
