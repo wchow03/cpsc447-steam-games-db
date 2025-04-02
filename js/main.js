@@ -149,14 +149,6 @@ d3.json('data/steamdb_preprocessed.json').then(data => {
             d3.select("#loading-spinner").style('opacity', '0%') // hide loading spinner
         }, 2000)
     });
-  
-    // let bubbleChart = new BubbleChart({ parentElement: '.bubblechart .graph'}, data);
-    //
-    // document.getElementById("reset-button").addEventListener("click", function() {
-    //     bubbleChart.filteredData = null;  // Clear filtered data
-    //     bubbleChart.updateVis();  // Re-render with full dataset
-    //     this.style.display = "none";  // Hide reset button again
-    //  });
 })
 
 
@@ -200,7 +192,7 @@ d3.select("#treemap-question")
     .on('mouseover', (event, d) => {
         d3.select("#v_tooltip")
             .style("opacity", 1)
-            .html(`This graph does this.....`);
+            .html("<b>Slide</b> to filter to the top X games.<br /><b>Clicking</b> will only show games with the same difficulty.<br /><b>Reset</b> the graph to the main view using the button on the top right.");
     }).on("mousemove", (event) => {
         d3.select("#v_tooltip")
             .style("left", (event.pageX + 10) + "px")
@@ -215,7 +207,7 @@ d3.select("#streamgraph-question")
     .on('mouseover', (event, d) => {
         d3.select("#v_tooltip")
             .style("opacity", 1)
-            .html(`This graph does this.....`);
+            .html(`<b>Click</b> on a year to filter the Language Distribution barchart to only consider games released in that year.</br> <b>Click</b> on the chart background to reset.`);
     }).on("mousemove", (event) => {
         d3.select("#v_tooltip")
             .style("left", (event.pageX + 10) + "px")
@@ -230,10 +222,10 @@ d3.select("#barchart-question")
     .on('mouseover', (event, d) => {
         d3.select("#v_tooltip")
             .style("opacity", 1)
-            .html(`This graph does this.....`);
+            .html(`<b>Click</b> on a bar to filter the Genres(UPDATE) streamgraph to only consider games available in that language.</br> <b>Click</b> on the bar again or the chart background to reset.`);
     }).on("mousemove", (event) => {
         d3.select("#v_tooltip")
-            .style("left", (event.pageX - 180) + "px") // update
+            .style("left", (event.pageX - 257) + "px") // update
             .style("top", (event.pageY - 20) + "px");
     }).on('mouseout', (event, d) => {
         d3.select("#v_tooltip")

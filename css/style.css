@@ -26,12 +26,11 @@ body {
         .bi-controller {
             width: 30px;
             height: 30px;
-            /* margin-left: 10px; */
         }
         #steam-games-title {
             font-weight: 600;
             font-size: 20px;
-            margin: 0 10px 0 20px;
+            margin: 0 15px 0 15px;
         }
         .group-members-text {
             font-weight: 600;
@@ -160,6 +159,7 @@ body {
     pointer-events: none; /* Prevents interfering with mouse events */
     transition: opacity 0.2s ease-in-out;
     font-family: "Motiva Sans", Arial, Helvetica, sans-serif;
+    max-width: 250px;
 }
 
 #reset-button {
