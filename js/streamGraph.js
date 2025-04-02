@@ -48,7 +48,7 @@ class StreamGraph {
           .attr('opacity', 0)
 
       // Init axes scales
-      vis.xScale = d3.scaleLinear()
+      vis.xScale = d3.scaleBand()
         .range([0, width]);
 
       vis.yScale = d3.scaleLinear()
@@ -62,10 +62,9 @@ class StreamGraph {
       
       // Create SVG area
       vis.chartArea = vis.svg.append('g')
-        .attr('class', 'chart')
         .attr("transform", `translate(${vis.config.margin.left}, ${vis.config.margin.top})`);
 
-      vis.chart = vis.chartArea.append('g');
+      vis.chart = vis.chartArea.append('g')
 
       vis.xAxis = d3.axisBottom(vis.xScale)
         .tickSize(-height*0.8)
@@ -130,7 +129,8 @@ class StreamGraph {
       vis.stackedData = vis.stack(vis.genreCountG);
 
       // Set domains
-      vis.xScale.domain(d3.extent(vis.data, d => vis.xValue(d)));
+      let yearRange = d3.extent(vis.data, d => vis.xValue(d));
+      vis.xScale.domain(Array.from(new Array(yearRange[1] - yearRange[0] + 1), (_, i) => i + yearRange[0]));
       vis.yScale.domain([-300, 300]);
       vis.colour.domain(vis.config.genreCategories);
 
