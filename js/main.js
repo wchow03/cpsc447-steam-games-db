@@ -247,8 +247,19 @@ dispatcher
     .on('onSliderUpdate', () => {
         // handle slider widget event
     })
-    .on('onYearUpdate', () => {
+    .on('onYearUpdate', selectedYears => {
         // handle year bidirectional event
+        console.log("here");
+        console.log(selectedYears);
+        if (selectedYears.length == 0) {
+            barChart.data = globalData;
+        } else {
+            // filter data to only include ones with selected genres
+            // generalized for possibility to select multiple genres
+            barChart.data = globalData.filter(d => selectedYears.includes(d.published_store.getFullYear()));
+            console.log("s filter length = ", barChart.data.length)
+        }
+        barChart.updateVis();
     })
     .on('onLanguageUpdate', selectedLanguage => {
         // handle language bidirectional event

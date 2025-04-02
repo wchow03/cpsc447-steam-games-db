@@ -4,7 +4,7 @@ class StreamGraph {
      * Class constructor with initial configuration
      * @param {Object}
      */
-    constructor(_config, data) {
+    constructor(_config, data, dispatcher) {
       this.config = {
         parentElement: _config.parentElement,
         containerWidth: 700,
@@ -22,6 +22,7 @@ class StreamGraph {
         legendRadius: 5,
       }
       this.data = data;
+      this.dispatcher = dispatcher;
       this.initVis();
     }
   
@@ -197,5 +198,19 @@ class StreamGraph {
       vis.xAxisG
         .call(vis.xAxis)
         .call(g => g.select('.domain').remove());
+
+      // vis.xAxisG
+      vis.chart.selectAll('.tick text')
+        .on('click', function (event, d) {
+          // Check if is active
+          const isActive = d3.select(this).classed('active');
+          vis.chart.selectAll('.tick text').classed('active', g => g == d ? !isActive : false);
+
+          // Get all active genres
+          const selectedYears = vis.chart.selectAll('.tick text.active').data();
+          
+          // Trigger filter event
+          vis.dispatcher.call('onYearUpdate', event, selectedYears);
+        });
     }
   }
