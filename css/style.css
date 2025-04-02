@@ -286,9 +286,12 @@ body {
         cursor: pointer;
     }
 
-    .tick:hover,
-    .tick.active:hover {
+    .tick:hover {
         color: #2597da;
+    }
+
+    .tick.active:hover {
+        color: #7b9f25;
     }
 
     .tick.active {

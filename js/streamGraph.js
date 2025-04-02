@@ -38,6 +38,15 @@ class StreamGraph {
           .attr("width", vis.config.containerWidth)
           .attr("height", vis.config.containerHeight)
 
+      // Create reset filter area
+      vis.chartBase = vis.svg.append('rect')
+          .attr('class', 'stream-base')
+          .attr('x', 0)
+          .attr('y', 0)
+          .attr('width', vis.config.containerWidth)
+          .attr('height', vis.config.containerHeight)
+          .attr('opacity', 0)
+
       // Init axes scales
       vis.xScale = d3.scaleLinear()
         .range([0, width]);
@@ -212,5 +221,11 @@ class StreamGraph {
           // Trigger filter event
           vis.dispatcher.call('onYearUpdate', event, selectedYears);
         });
+
+      // reset filter on bar chart
+      vis.chartBase.on('click', function (event, d) {
+        vis.chart.selectAll('.tick.active').classed('active', false);
+        vis.dispatcher.call('onYearUpdate', event, []);
+      })
     }
   }
