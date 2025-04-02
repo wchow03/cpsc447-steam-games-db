@@ -201,6 +201,10 @@ body {
         /* fill:#66c0f4; */
         shape-rendering: crispEdges;
     }
+
+    .bar.active {
+        fill: #a5d92b;
+    }
     
     .bar-chart-y-axis text {
         font-weight: bold;
@@ -280,5 +284,21 @@ body {
             left: 340px;
             top: 20px;
         }
+    }
+
+    .tick {
+        cursor: pointer;
+    }
+
+    .tick:hover {
+        color: #2597da;
+    }
+
+    .tick.active:hover {
+        color: #7b9f25;
+    }
+
+    .tick.active {
+        color: #a5d92b;
     }
 }

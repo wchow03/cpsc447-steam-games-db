@@ -4,7 +4,7 @@ class StreamGraph {
      * Class constructor with initial configuration
      * @param {Object}
      */
-    constructor(_config, data) {
+    constructor(_config, data, dispatcher) {
       this.config = {
         parentElement: _config.parentElement,
         containerWidth: 700,
@@ -22,6 +22,7 @@ class StreamGraph {
         legendRadius: 5,
       }
       this.data = data;
+      this.dispatcher = dispatcher;
       this.initVis();
     }
   
@@ -37,8 +38,17 @@ class StreamGraph {
           .attr("width", vis.config.containerWidth)
           .attr("height", vis.config.containerHeight)
 
+      // Create reset filter area
+      vis.chartBase = vis.svg.append('rect')
+          .attr('class', 'stream-base')
+          .attr('x', 0)
+          .attr('y', 0)
+          .attr('width', vis.config.containerWidth)
+          .attr('height', vis.config.containerHeight)
+          .attr('opacity', 0)
+
       // Init axes scales
-      vis.xScale = d3.scaleLinear()
+      vis.xScale = d3.scaleBand()
         .range([0, width]);
 
       vis.yScale = d3.scaleLinear()
@@ -52,10 +62,9 @@ class StreamGraph {
       
       // Create SVG area
       vis.chartArea = vis.svg.append('g')
-        .attr('class', 'chart')
         .attr("transform", `translate(${vis.config.margin.left}, ${vis.config.margin.top})`);
 
-      vis.chart = vis.chartArea.append('g');
+      vis.chart = vis.chartArea.append('g')
 
       vis.xAxis = d3.axisBottom(vis.xScale)
         .tickSize(-height*0.8)
@@ -120,7 +129,8 @@ class StreamGraph {
       vis.stackedData = vis.stack(vis.genreCountG);
 
       // Set domains
-      vis.xScale.domain(d3.extent(vis.data, d => vis.xValue(d)));
+      let yearRange = d3.extent(vis.data, d => vis.xValue(d));
+      vis.xScale.domain(Array.from(new Array(yearRange[1] - yearRange[0] + 1), (_, i) => i + yearRange[0]));
       vis.yScale.domain([-300, 300]);
       vis.colour.domain(vis.config.genreCategories);
 
@@ -197,5 +207,25 @@ class StreamGraph {
       vis.xAxisG
         .call(vis.xAxis)
         .call(g => g.select('.domain').remove());
+
+      // Filter for year on bar chart interaction
+      vis.chart.selectAll('.tick')
+        .on('click', function (event, d) {
+          // Check if is active
+          const isActive = d3.select(this).classed('active');
+          vis.chart.selectAll('.tick').classed('active', g => g == d ? !isActive : false);
+
+          // Get all active genres
+          const selectedYears = vis.chart.selectAll('.tick.active').data();
+          
+          // Trigger filter event
+          vis.dispatcher.call('onYearUpdate', event, selectedYears);
+        });
+
+      // reset filter on bar chart
+      vis.chartBase.on('click', function (event, d) {
+        vis.chart.selectAll('.tick.active').classed('active', false);
+        vis.dispatcher.call('onYearUpdate', event, []);
+      })
     }
   }

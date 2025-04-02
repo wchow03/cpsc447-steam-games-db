@@ -83,7 +83,6 @@ class BarChart {
   
     updateVis() {
         let vis = this;
-        console.log(vis.data);
 
         vis.languages = new Set();
         vis.languagesCount = {};
@@ -91,7 +90,7 @@ class BarChart {
         vis.data.forEach(d => {
             d.languages.forEach(g => {
                 vis.languages.add(g)
-                vis.languagesCount[g] = (languagesCount[g] || 0);
+                vis.languagesCount[g] = (vis.languagesCount[g] + 1) || 1;
             });
         });
 
@@ -156,17 +155,17 @@ class BarChart {
 
         // Mouse click on bar chart language
         bar.on('click', function (e, d) {
-
             // If a bar has been selected, deselect the selected bar since user has clicked a new bar
             if (selectedBar) {
                 d3.select(selectedBar)
+                    .classed('active', false)
                     .attr('fill', '#66c0f4');
             }
 
             // Change colour of selected bar
             if (!selectedBar || selectedBar != this) {
                 d3.select(this)
-                    .attr('fill', '#a5d92b');
+                    .classed('active', true);
             }
 
             // Filter data to only contain selected language
