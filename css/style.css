@@ -201,6 +201,10 @@ body {
         /* fill:#66c0f4; */
         shape-rendering: crispEdges;
     }
+
+    .bar.active {
+        fill: #a5d92b;
+    }
     
     .bar-chart-y-axis text {
         font-weight: bold;

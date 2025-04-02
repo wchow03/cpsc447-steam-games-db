@@ -83,8 +83,6 @@ class BarChart {
   
     updateVis() {
         let vis = this;
-        console.log("bar chart data:");
-        console.log(vis.data);
 
         vis.languages = new Set();
         vis.languagesCount = {};
@@ -95,9 +93,6 @@ class BarChart {
                 vis.languagesCount[g] = (vis.languagesCount[g] + 1) || 1;
             });
         });
-
-        console.log("languages: ", vis.languages);
-        console.log("languagesCount: ", vis.languagesCount);
 
         // Specify x and y data
         
@@ -170,8 +165,7 @@ class BarChart {
             // Change colour of selected bar
             if (!selectedBar || selectedBar != this) {
                 d3.select(this)
-                    .classed('active', true)
-                    .attr('fill', '#a5d92b');
+                    .classed('active', true);
             }
 
             // Filter data to only contain selected language
