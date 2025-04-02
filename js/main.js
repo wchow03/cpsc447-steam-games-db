@@ -251,7 +251,10 @@ dispatcher
         // handle year bidirectional event
         console.log("here");
         console.log(selectedYears);
+        let activeBar = d3.selectAll('.bar.active').data().map(k => k[0]);
         if (selectedYears.length == 0) {
+            console.log("active bars: ", activeBar);
+            console.log(activeBar[0])
             barChart.data = globalData;
         } else {
             // filter data to only include ones with selected genres
@@ -260,15 +263,17 @@ dispatcher
             console.log("s filter length = ", barChart.data.length)
         }
         barChart.updateVis();
+        d3.selectAll('.bar').classed('active', b => b[0] == activeBar);
     })
     .on('onLanguageUpdate', selectedLanguage => {
         // handle language bidirectional event
 
         // If a language was selected, filter data that contain selected language
         // Otherwise, empty space was clicked so reset all selected data
+        console.log("selected lang: ", selectedLanguage)
         if (selectedLanguage) {
             // Filter data to be only the selected language
-            let filtered_language_data = globalData.filter(d => d.languages.includes(selectedLanguage));
+            let filtered_language_data = globalData.filter(d => d.languages.includes(selectedLanguage[0]));
             console.log("Filtered language data length: ", filtered_language_data.length);
             streamGraph.data = filtered_language_data;
         } else {
