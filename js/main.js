@@ -20,6 +20,7 @@ const dispatcher = d3.dispatch('onYearUpdate', 'onSliderUpdate', 'onLanguageUpda
 
 // Store async data as global variable to be used later
 let globalData;
+let topX;
 
 // Bar Chart
 let barChart;
@@ -31,7 +32,7 @@ let streamGraph;
 
 let treeMap;
 
-d3.json('data/steamdb_preprocessed.json').then(data => {
+d3.json('data/steamdb_w_rating.json').then(data => {
 
     // text processing
     data.forEach(d => {
@@ -136,6 +137,11 @@ d3.json('data/steamdb_preprocessed.json').then(data => {
     streamGraph.updateVis();
 
     treeMap = new TreeMap({ parentElement: '.treemap .graph'}, data, dispatcher);
+    const sorted = [...data].sort((a, b) => b.stsp_owners - a.stsp_owners);
+    treeMap.data = sorted.slice(0, 1000);  // default top 1000
+    treeMap.filteredData = null;
+    treeMap.level = 1;
+    treeMap.updateVis();
 
     document.getElementById("reset-button").addEventListener("click", function() {
         d3.select("#loading-spinner").style('opacity', '100%') // show loading spinner
@@ -143,6 +149,7 @@ d3.json('data/steamdb_preprocessed.json').then(data => {
         // timeout forces the loading spinner to show up first
         setTimeout(() => {
             treeMap.filteredData = null;  // Clear filtered data
+            treeMap.level = 1;
             treeMap.updateVis();  // Re-render with full dataset
             this.classList.remove("active");  // Hide reset button again
             this.classList.add("disabled");  // Hide reset button again
@@ -183,7 +190,10 @@ const slider = d3.select('#treemap-slider')
     .attr('class', 'form-range')
     .on('input', (event) => {
         // TODO update onchange later -- currently prints out new value
-        console.log(sliderValues[event.target.value])
+        // console.log(sliderValues[event.target.value])
+        const selectedSliderIndex = +event.target.value;
+        topX = sliderValues[selectedSliderIndex];
+        dispatcher.call('onSliderUpdate', null, topX);
     })
 
 // general helper tooltips
@@ -238,6 +248,13 @@ d3.select("#barchart-question")
 dispatcher
     .on('onSliderUpdate', () => {
         // handle slider widget event
+        const sorted = [...globalData].sort((a, b) => b.stsp_owners - a.stsp_owners);
+        const topData = sorted.slice(0, topX);
+
+        treeMap.data = topData;
+        treeMap.filteredData = null;     // Clear filtered view
+        treeMap.level = 1;        // Reset to level 1
+        treeMap.updateVis();             // Re-render
     })
     .on('onYearUpdate', selectedYears => {
         // handle year bidirectional event
