@@ -13,7 +13,7 @@ class StreamGraph {
           top: 0,
           right: 20,
           bottom: 0,
-          left: 20
+          left: 20,
         },
         genreCategories: _config.genreCategories,
         tooltipPadding: _config.tooltipPadding || 15,
@@ -161,9 +161,6 @@ class StreamGraph {
         .join((enter) => {
           let div = enter.append('div')
             .attr('class', 'legend-item')
-            .attr('transform', (d, i) => {
-              return `translate(10, ${i * 20})`
-            })
           
           // genre colour indicator
           div.append('div')

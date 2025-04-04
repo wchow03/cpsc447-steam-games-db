@@ -144,7 +144,7 @@ d3.json('data/steamdb_w_rating.json').then(data => {
     treeMap.updateVis();
 
     document.getElementById("reset-button").addEventListener("click", function() {
-        d3.select("#loading-spinner").style('opacity', '100%') // show loading spinner
+        d3.select("#loading-spinner").style('display', 'block') // show loading spinner
 
         // timeout forces the loading spinner to show up first
         setTimeout(() => {
@@ -153,7 +153,7 @@ d3.json('data/steamdb_w_rating.json').then(data => {
             treeMap.updateVis();  // Re-render with full dataset
             this.classList.remove("active");  // Hide reset button again
             this.classList.add("disabled");  // Hide reset button again
-            d3.select("#loading-spinner").style('opacity', '0%') // hide loading spinner
+            d3.select("#loading-spinner").style('display', 'none') // hide loading spinner
         }, 2000)
     });
 })
@@ -188,12 +188,19 @@ const slider = d3.select('#treemap-slider')
     .attr('min', 0)
     .attr('max', sliderValues.length - 1)
     .attr('class', 'form-range')
-    .on('input', (event) => {
-        // TODO update onchange later -- currently prints out new value
+    .on('change', (event) => {
         // console.log(sliderValues[event.target.value])
-        const selectedSliderIndex = +event.target.value;
-        topX = sliderValues[selectedSliderIndex];
-        dispatcher.call('onSliderUpdate', null, topX);
+
+        d3.select("#loading-spinner-treemap").style('display', 'block') // show loading spinner
+
+        // timeout forces the loading spinner to show up first
+        setTimeout(() => {
+            const selectedSliderIndex = +event.target.value;
+            topX = sliderValues[selectedSliderIndex];
+            dispatcher.call('onSliderUpdate', null, topX);
+            d3.select("#loading-spinner-treemap").style('display', 'none'); // hide loading spinner
+        }, 2000)
+
     })
 
 // general helper tooltips
@@ -232,7 +239,7 @@ d3.select("#barchart-question")
     .on('mouseover', (event, d) => {
         d3.select("#v_tooltip")
             .style("opacity", 1)
-            .html(`<b>Click</b> on a bar to filter the Genres(UPDATE) streamgraph to only consider games available in that language.</br> <b>Click</b> on the bar again or the chart background to reset.`);
+            .html(`<b>Click</b> on a bar to filter the <i>Genres over the Years</i> graph to only consider games available in that language.</br> <b>Click</b> on the bar again or the chart background to reset.`);
     }).on("mousemove", (event) => {
         d3.select("#v_tooltip")
             .style("left", (event.pageX - 257) + "px") // update

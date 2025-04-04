@@ -3,16 +3,19 @@ Chrome browser. */
 
 /* intro segment */
 
+html {
+    overflow: hidden;
+}
 body {
-    /* TODO: update font later */
     font-family: "Motiva Sans", Arial, Helvetica, sans-serif;
-    /* background-color: #1b2838; */
     background: linear-gradient(to bottom right, #1c4453, #1b2838); 
     background-repeat: no-repeat;
     background-attachment: fixed;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     color: #c7d5e0;
     margin: 0;
+    padding: 0;
 }
 .intro-segment {
     h1 {
@@ -69,7 +72,6 @@ body {
 .treemap {
     .slider{
         width: 700px;
-        /* TODO update position */
         position: absolute;
         top: 95px;
         left: 415px;
@@ -81,11 +83,9 @@ body {
             height: 8px;
         }
         input[type="range"]::-webkit-slider-thumb {
-            /* appearance: none; */
             width: 16px;
             height: 16px;
             background: #66c0f4; 
-            /* border: 2px solid #66c0f4; */
         }
     }
     .description {
@@ -97,23 +97,32 @@ body {
         height: 160px;
         margin-left: 20px;
         position: relative;
+
         .legend {
             display: flex;
-            flex-wrap: wrap; /* Allows wrapping if there are many items */
-            align-items: center;
-            justify-content: left;
-            gap: 10px; /* Adds spacing between legend items */
-            padding-top: 10px;
+            flex-wrap: wrap;
+            flex-direction: column;
+            height: 110px;
+            width: 350px;
+            padding-left: 10px;
+
+            .average-rating-legend {
+                margin-top: 25px;
+            }
     
         }
         .legend-item {
             display: flex;
             align-items: center;
             font-size: 13px;
+            gap: 10px;
+            width: 50%;
         }
     
         .title {
             padding-bottom: 5px;
+            font-size: 16px;
+            font-weight: bold;
         }
 
         .bi-question-circle-fill {
@@ -185,7 +194,17 @@ body {
     position: absolute;
     top: 25px;
     right: 200px;
-    opacity: 0;
+    display: none;
+}
+
+#loading-spinner-treemap {
+    position: absolute;
+    top: 250px;
+    left: 700px;
+    height: 10rem;
+    width: 10rem;
+    z-index: 999;
+    display: none;
 }
 
 /* bar chart */
@@ -194,11 +213,11 @@ body {
     position: absolute;
     top: 95px;
     left: 1135px;
-    padding: 10px;
+    /* padding: 10px; */
+    padding-top: 10px;
     background: linear-gradient(to bottom right, rgba(26, 24, 33, 0.3), rgba(7, 7, 10, 0.4));
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
     .bar {
-        /* fill:#66c0f4; */
         shape-rendering: crispEdges;
     }
 
@@ -230,13 +249,8 @@ body {
 
 /* streamgraph */
 .streamgraph {
-    /* background: linear-gradient(to bottom right, rgba(26, 24, 33, 0.3), rgba(7, 7, 10, 0.4)); */
     position: absolute;
-    /* margin: 10px;
-    padding: 10px; */
     top: 485px;
-    /* width: 1100px; */
-    /* left: 410px; */
 
     .graph {
         position: absolute;
@@ -250,32 +264,36 @@ body {
     .description {
         background: linear-gradient(to bottom right, rgba(26, 24, 33, 0.3), rgba(7, 7, 10, 0.4));
         box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
-        padding: 10px;
+        padding: 20px;
         position: absolute;
         width: 375px;
         margin-left: 20px;
-        height: 225px;
+        height: 231px;
 
         .title {
             width: 375px;
-            padding: 10px;
+            padding: 0px 0px 8px 0px;
             top: 50px;
+            padding-bottom: 5px;
+            font-size: 16px;
+            font-weight: bold;
         }
     
         .legend {
-            top: 100px;
-            padding: 10px;
+
             display: flex;
             flex-direction: column;
             flex-wrap: wrap;
-            width: 375px;
-            height: 180px;
+            width: 350px;
+            height: 175px;
+            padding-left: 10px;
 
             .legend-item {
                 display: flex;
                 align-items: center;
                 gap: 10px;
                 font-size: 13px;
+                width: 50%;
             }
         }
 
