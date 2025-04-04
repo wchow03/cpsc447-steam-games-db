@@ -155,44 +155,15 @@ class BarChart {
 
         // Mouse click on bar chart language
         bar.on('click', function (e, d) {
-            // If a bar has been selected, deselect the selected bar since user has clicked a new bar
-            if (selectedBar) {
-                d3.select(selectedBar)
-                    .classed('active', false)
-                    .attr('fill', '#66c0f4');
-            }
+            // Check if is active
+            const isActive = d3.select(this).classed('active');
+            vis.chart.selectAll('.bar').classed('active', g => g == d ? !isActive : false);
 
-            // Change colour of selected bar
-            if (!selectedBar || selectedBar != this) {
-                d3.select(this)
-                    .classed('active', true);
-            }
-
-            // Filter data to only contain selected language
-            let selectedLanguage = d[0];
+            // Get all active language bars
+            const selectedLanguages = vis.chart.selectAll('.bar.active').data().map(k => k[0]);
             
-            // If the current selected bar is clicked again to be deselected, perform same the function 
-            // that clicking on an empty space in bar char does (clears all selected data)
-            
-            // Otherwise update the selected bar to the new bar and filter on selected language
-
-            if (selectedBar === this) {
-                selectedLanguage = null;
-                selectedBar = null;
-
-                // Call dispatcher will null to reset all selected data
-                vis.dispatcher.call('onLanguageUpdate', e, null);
-
-                // Call update vis again to reset the selected bar
-                vis.updateVis();
-            } else {
-                selectedBar = this;
-            }
-
-            // Call dispatcher with selected language
-            vis.dispatcher.call('onLanguageUpdate', e, selectedLanguage);
-
-            
+            // Trigger filter event
+            vis.dispatcher.call('onLanguageUpdate', e, selectedLanguages);            
         });
 
         // Create click area for bar chart (used to reset selected language)
@@ -201,15 +172,9 @@ class BarChart {
             .attr('height', vis.height)
             .attr('opacity', '0%')
             .on('click', function (e) {
-                if (!d3.select(e.target).classed('bar')) {
-                    selectedBar = null;
-
-                    // Call dispatcher will null to reset all selected data
-                    vis.dispatcher.call('onLanguageUpdate', e, null);
-
-                    // Call update vis again to reset the selected bar
-                    vis.updateVis();
-                }
+                // Turn off all active bars, reset filter
+                vis.chart.selectAll('.bar.active').classed('active', false);
+                vis.dispatcher.call('onLanguageUpdate', e, []);
         });
 
         // Do not render the x-axis

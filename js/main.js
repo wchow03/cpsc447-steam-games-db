@@ -258,9 +258,9 @@ dispatcher
 
         // If a language was selected, filter data that contain selected language
         // Otherwise, empty space was clicked so reset all selected data
-        if (selectedLanguage) {
+        if (selectedLanguage.length != 0) {
             // Filter data to be only the selected language
-            let filtered_language_data = globalData.filter(d => d.languages.includes(selectedLanguage));
+            let filtered_language_data = globalData.filter(d => d.languages.includes(selectedLanguage[0]));
             console.log("Filtered language data length: ", filtered_language_data.length);
             streamGraph.data = filtered_language_data;
         } else {
