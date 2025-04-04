@@ -206,12 +206,14 @@ class TreeMap {
                     .attr('stroke', '#fff')
                     .attr('stroke-width', 1);
             }).on("click", (event, d) => {
-                console.log(`Filtering for difficulty: ${d.data.gfq_difficulty}`);
-                vis.filteredData = vis.data.filter(item => item.gfq_difficulty === d.data.gfq_difficulty);
-                vis.level = 2;
-                vis.updateVis();
-                d3.select("#reset-button").classed("active", true); // set reset button active
-                d3.select("#reset-button").classed("disabled", false); // set reset button not disabled
+                if (vis.level === 1) {
+                    //console.log(`Filtering for difficulty: ${d.data.gfq_difficulty}`);
+                    vis.filteredData = vis.data.filter(item => item.gfq_difficulty === d.data.gfq_difficulty);
+                    vis.level = 2;
+                    vis.updateVis();
+                    d3.select("#reset-button").classed("active", true); // set reset button active
+                    d3.select("#reset-button").classed("disabled", false); // set reset button not disabled
+                }
             });
     }
 }
