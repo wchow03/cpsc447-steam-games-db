@@ -105,6 +105,8 @@ body {
             height: 110px;
             width: 350px;
             padding-left: 10px;
+            padding-top: 1px;
+            gap: 1px;
 
             .average-rating-legend {
                 margin-top: 25px;
@@ -215,6 +217,7 @@ body {
     left: 1135px;
     /* padding: 10px; */
     padding-top: 10px;
+    margin-left: 3px;
     background: linear-gradient(to bottom right, rgba(26, 24, 33, 0.3), rgba(7, 7, 10, 0.4));
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
     .bar {
@@ -286,7 +289,9 @@ body {
             flex-wrap: wrap;
             width: 350px;
             height: 175px;
+            padding-top: 2px;
             padding-left: 10px;
+            gap: 1px;
 
             .legend-item {
                 display: flex;
