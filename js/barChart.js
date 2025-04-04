@@ -8,20 +8,13 @@ class BarChart {
     constructor(_config, data, dispatcher) {
       this.config = {
         parentElement: _config.parentElement,
-        // containerWidth: 900,
-        // containerHeight: 700,
-        containerWidth: 350,
-        // containerHeight: 750,
-        containerHeight: 550,
+        containerWidth: 370,
+        containerHeight: 574,
         margin: {
-        //   top: 10,
-        //   right: 250,
-        //   bottom: 20,
-        //   left: 10
             top: 0,
-            right: 0,
-            bottom: 0,
-            left: 0
+            right: 10,
+            bottom: 10,
+            left: 10
         }
         // Todo: Add or remove attributes from config as needed
       }
@@ -66,7 +59,7 @@ class BarChart {
         
         // Append group element that will contain actual chart and position according to margins
         vis.chart = vis.svg.append('g')
-            .attr('transform', `translate(${vis.config.margin.left + 10}, ${vis.config.margin.top})`);
+            .attr('transform', `translate(${vis.config.margin.left }, ${vis.config.margin.top})`);
 
         // Append empty x-axis group and move to bottom of chart
         vis.xAxisG = vis.chart.append('g')
@@ -167,9 +160,9 @@ class BarChart {
         });
 
         // Create click area for bar chart (used to reset selected language)
-        vis.chart.insert('rect', ':first-child')
-            .attr('width', vis.width)
-            .attr('height', vis.height)
+        vis.svg.insert('rect', ':first-child')
+            .attr('width', vis.config.containerWidth)
+            .attr('height', vis.config.containerHeight)
             .attr('opacity', '0%')
             .on('click', function (e) {
                 // Turn off all active bars, reset filter

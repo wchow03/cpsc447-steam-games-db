@@ -73,8 +73,12 @@ class TreeMap {
 
         vis.legendContainer.selectAll('*').remove();
 
+        let difficultyLevelsOrder = ["Simple", "Simple-Easy", "Easy", "Easy-Just Right", "Just Right",
+            "Just Right-Tough", "Tough", "Tough-Unforgiving", "Unforgiving", null]
+
         if (vis.level === 1) {
             let difficultyLevels = [...new Set(vis.data.map(d => d.gfq_difficulty))];
+            difficultyLevels = difficultyLevelsOrder.filter(x => x ? difficultyLevels.includes(x) : true);
 
             let legend = vis.legendContainer.selectAll('.legend-item')
                 .data(difficultyLevels)
@@ -85,7 +89,6 @@ class TreeMap {
                 .style('width', '12px')
                 .style('height', '12px')
                 .style('border-radius', '50%')
-                .style('margin-right', '8px')
                 .style('background-color', d => vis.colorScale(d));
 
             legend.append('span')
@@ -99,8 +102,9 @@ class TreeMap {
             vis.legendContainer.selectAll('svg').remove();
 
             const svg = vis.legendContainer.append("svg")
+                .attr("class", "average-rating-legend")
                 .attr("width", 300)
-                .attr("height", 50);
+                .attr("height", 60);
 
             const defs = svg.append("defs");
             const linearGradient = defs.append("linearGradient")
@@ -140,7 +144,7 @@ class TreeMap {
 
             svg.append("text")
                 .attr("x", 150) // center (half of 300 width)
-                .attr("y", 40) // below the axis
+                .attr("y", 50) // below the axis
                 .attr("text-anchor", "middle")
                 .style("fill", "#c7d5e0")
                 .style("font-size", "14px")
@@ -190,7 +194,7 @@ class TreeMap {
                             <strong>${d.data.name}</strong><br>
                             Difficulty: ${d.data.gfq_difficulty || 'N/A'}<br>
                             Median Playtime: ${d.data.stsp_mdntime || 'N/A'} mins<br>
-                            Average Rating: ${d.data.avg_rating !== undefined ? d.data.avg_rating.toFixed(1) : 'N/A'}<br>
+                            Average Rating: ${d.data.avg_rating ? d.data.avg_rating.toFixed(1) : 'N/A'}<br>
                             Number of Owners: ${d.data.stsp_owners || 'N/A'}
                     `)
                 d3.select(event.target)
