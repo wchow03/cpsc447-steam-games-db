@@ -177,8 +177,29 @@ class BarChart {
                 vis.dispatcher.call('onLanguageUpdate', e, []);
         });
 
+        // No data note
+        vis.chart.append('text')
+            .attr('class', 'empty-chart-info')
+            .attr('dx', vis.config.containerWidth / 2)
+            .attr('dy', vis.config.containerHeight / 3)
+            .attr('text-anchor', 'middle')
+            .attr('display', 'none')
+            .text("No data available");
+
         // Do not render the x-axis
         vis.yAxisG.call(vis.yAxis);
+
+        // Remove y-axis and render no data note
+        if (vis.data.length == 0) {
+            vis.chart.select('.empty-chart-info')
+                .attr('display', 'block')
+            
+            vis.yAxisG.call(g => g.select('.domain').remove());
+        } else {
+            // remove note if has data
+            vis.chart.select('.empty-chart-info')
+                .attr('display', 'none')
+        }
 
     }
   }
