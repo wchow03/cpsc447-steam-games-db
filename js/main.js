@@ -255,6 +255,8 @@ dispatcher
         treeMap.filteredData = null;     // Clear filtered view
         treeMap.level = 1;        // Reset to level 1
         treeMap.updateVis();             // Re-render
+        d3.select("#reset-button").classed("active", false); // set reset button not active
+        d3.select("#reset-button").classed("disabled", true); // set reset button disabled
     })
     .on('onYearUpdate', selectedYears => {
         // handle year bidirectional event
