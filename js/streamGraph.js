@@ -154,7 +154,7 @@ class StreamGraph {
 
       // Area generator
       vis.area = d3.area()
-        .x((d, i) => vis.xScale(d.data[0]))
+        .x((d, i) => vis.xScale(d.data[0]) + vis.xScale.bandwidth() / 2)
         .y0(d => vis.yScale(d[0]))
         .y1(d => vis.yScale(d[1]))
         .curve(d3.curveMonotoneX)
@@ -166,7 +166,6 @@ class StreamGraph {
           .attr('class', 'area')
           .style('fill', d => vis.colour(d.key))
           .attr('d', vis.area)
-          .attr('transform', `translate(13, 0)`);
 
       // Render Legend
       vis.legend.selectAll('.legend-item')
