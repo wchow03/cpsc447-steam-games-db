@@ -105,7 +105,7 @@ class BarChart {
         // Set scale for input domains
         vis.xScale.domain([d3.max(Object.entries(vis.languagesCount), vis.xValue), 0]);
         
-        vis.yScale.domain(Object.entries(vis.languagesCount).map(vis.yValue));
+        vis.yScale.domain(Object.entries(vis.languagesCount).map(vis.yValue).sort());
 
         vis.renderVis();
     }
