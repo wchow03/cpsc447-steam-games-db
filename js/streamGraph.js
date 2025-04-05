@@ -128,10 +128,22 @@ class StreamGraph {
       vis.stack.value((d, key) => d[1][[...vis.config.genreCategories].indexOf(key)].value);
       vis.stackedData = vis.stack(vis.genreCountG);
 
+      // get dynamic range for genre counts (for yScale)
+      let min = 0;
+      let max = 0;
+      vis.stackedData.forEach(g => {
+        let gMin = d3.min(g, d => d[0]);
+        let gMax = d3.max(g, d => d[1]);
+
+        if (gMin < min) min = gMin;
+        if (gMax > max) max = gMax;
+      });
+
       // Set domains
       let yearRange = d3.extent(vis.data, d => vis.xValue(d));
       vis.xScale.domain(Array.from(new Array(yearRange[1] - yearRange[0] + 1), (_, i) => i + yearRange[0]));
-      vis.yScale.domain([-300, 300]);
+      let countRange = Math.max(Math.abs(min), max) * 1.4;
+      vis.yScale.domain([countRange*-1, countRange]);
       vis.colour.domain(vis.config.genreCategories);
 
       vis.renderVis();
@@ -154,6 +166,7 @@ class StreamGraph {
           .attr('class', 'area')
           .style('fill', d => vis.colour(d.key))
           .attr('d', vis.area)
+          .attr('transform', `translate(13, 0)`);
 
       // Render Legend
       vis.legend.selectAll('.legend-item')
