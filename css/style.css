@@ -325,3 +325,9 @@ body {
         color: #a5d92b;
     }
 }
+
+/* Globel empty chart */
+.empty-chart-info {
+    font-size: 16;
+    fill: #c7d5e0;
+}
