@@ -245,6 +245,8 @@ d3.select("#barchart-question")
 
 
 // Dispatcher events
+let activeBar;
+let activeYears = [];
 dispatcher
     .on('onSliderUpdate', () => {
         // handle slider widget event
@@ -258,7 +260,8 @@ dispatcher
     })
     .on('onYearUpdate', selectedYears => {
         // handle year bidirectional event
-        let activeBar = d3.selectAll('.bar.active').data().map(k => k[0]);
+        activeYears = selectedYears;
+        
         if (selectedYears.length == 0) {
             barChart.data = globalData;
         } else {
@@ -268,10 +271,11 @@ dispatcher
         }
         barChart.updateVis();
         // Reactivate active bar
-        d3.selectAll('.bar').classed('active', b => b[0] == activeBar);
+        d3.selectAll('.bar').classed('active', b => b[0] == activeBar[0]);
     })
     .on('onLanguageUpdate', selectedLanguage => {
         // handle language bidirectional event
+        activeBar = selectedLanguage;
 
         // If a language was selected, filter data that contain selected language
         // Otherwise, empty space was clicked so reset all selected data
@@ -286,6 +290,8 @@ dispatcher
         
         // Update visualization
         streamGraph.updateVis();
+        // Reactive active years
+        d3.select('.streamgraph').selectAll('.tick').classed('active', y => activeYears.includes(y));
         
     });
 
