@@ -46,8 +46,8 @@ class TreeMap {
             [vis.width, 0]
         ];
 
-        // Define color scale for difficulty
-        vis.colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+        // Define Colour scale for difficulty
+        vis.ColourScale = vis.getColourScale();
 
         // Select legend container
         vis.legendContainer = d3.select('.treemap .legend');
@@ -63,12 +63,22 @@ class TreeMap {
 
         let dataToUse = vis.filteredData || vis.data;
 
+        // colour scheme based on level
         if (vis.level === 1) {
-            vis.colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+            vis.ColourScale = vis.getColourScale();
         } else {
-            vis.colorScale = d3.scaleSequential()
+            vis.ColourScale = d3.scaleSequential()
                 .interpolator(d3.interpolateBlues)
                 .domain([0, 100]); // assuming avg_rating is on a 0–100 scale
+        }
+
+        // title based on level
+        const titleElement = document.getElementById("treemap-title");
+
+        if (titleElement) {
+            titleElement.textContent = vis.level === 1
+                ? "DIFFICULTIES AND PLAYTIMES"
+                : "AVERAGE RATINGS";
         }
 
         vis.legendContainer.selectAll('*').remove();
@@ -76,6 +86,8 @@ class TreeMap {
         let difficultyLevelsOrder = ["Simple", "Simple-Easy", "Easy", "Easy-Just Right", "Just Right",
             "Just Right-Tough", "Tough", "Tough-Unforgiving", "Unforgiving", null]
 
+
+        // legend content based on level
         if (vis.level === 1) {
             let difficultyLevels = [...new Set(vis.data.map(d => d.gfq_difficulty))];
             difficultyLevels = difficultyLevelsOrder.filter(x => x ? difficultyLevels.includes(x) : true);
@@ -89,13 +101,13 @@ class TreeMap {
                 .style('width', '12px')
                 .style('height', '12px')
                 .style('border-radius', '50%')
-                .style('background-color', d => vis.colorScale(d));
+                .style('background-color', d => vis.ColourScale(d));
 
             legend.append('span')
                 .text(d => d ? d : 'Unknown');
 
         } else {
-            // Continuous color legend for avg_rating
+            // Continuous Colour legend for avg_rating
             const gradientId = "legend-gradient";
 
             // Remove old SVG if any
@@ -112,12 +124,12 @@ class TreeMap {
 
             linearGradient.selectAll("stop")
                 .data([
-                    { offset: "0%", color: vis.colorScale(0) },
-                    { offset: "100%", color: vis.colorScale(100) }
+                    { offset: "0%", Colour: vis.ColourScale(0) },
+                    { offset: "100%", Colour: vis.ColourScale(100) }
                 ])
                 .join("stop")
                 .attr("offset", d => d.offset)
-                .attr("stop-color", d => d.color);
+                .attr("stop-color", d => d.Colour);
 
             svg.append("rect")
                 .attr("x", 10)
@@ -182,8 +194,8 @@ class TreeMap {
             .attr('d', d => d3.line()(d.polygon) + 'z') // Convert polygon data to path
             .attr('fill', d =>
                 vis.level === 1
-                    ? vis.colorScale(d.data.gfq_difficulty)
-                    : vis.colorScale(typeof d.data.avg_rating === "number" ? d.data.avg_rating : 0)
+                    ? vis.ColourScale(d.data.gfq_difficulty)
+                    : vis.ColourScale(typeof d.data.avg_rating === "number" ? d.data.avg_rating : 0)
             )
             .attr('stroke', '#fff')
             .attr('stroke-width', 1)
@@ -219,5 +231,32 @@ class TreeMap {
                     d3.select("#reset-button").classed("disabled", false); // set reset button not disabled
                 }
             });
+    }
+
+    getColourScale() {
+        const diffs = [
+            "Unforgiving",
+            "Tough-Unforgiving",
+            "Tough",
+            "Just Right-Tough",
+            "Just Right",
+            "Easy-Just Right",
+            "Easy",
+            "Simple-Easy",
+            "Simple"
+        ];
+
+        const templateColours = d3.schemeSpectral[9]; //diverging colour scheme option
+        const diffColours = {};
+
+        diffs.forEach((label, i) => {
+            diffColours[label] = templateColours[i];
+        });
+
+        diffColours["N/A"] = "#999999";
+        diffColours[null] = "#999999";
+        diffColours[undefined] = "#999999";
+
+        return d => diffColours[d] || "#cccccc";
     }
 }
