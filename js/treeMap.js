@@ -63,6 +63,8 @@ class TreeMap {
 
         let dataToUse = vis.filteredData || vis.data;
 
+
+
         // colour scheme based on level
         if (vis.level === 1) {
             vis.ColourScale = vis.getColourScale();
@@ -166,9 +168,26 @@ class TreeMap {
 
 
 
-        let rootNode = d3.hierarchy({ children: dataToUse })
-            .sum(d => d.stsp_mdntime) // Size of the cell based on median playtime
-            .sort((a, b) => b.value - a.value);
+        // data structure based on level
+        let rootNode;
+        let groupedData;
+
+        if (vis.level === 1) {
+            // Group data by difficulty
+            groupedData = d3.groups(dataToUse, d => d.gfq_difficulty || 'Unknown');
+
+            // Convert to hierarchical structure
+            rootNode = d3.hierarchy({
+                children: groupedData.map(([difficulty, games]) => ({
+                    name: difficulty,
+                    children: games
+                }))
+            }).sum(d => d.stsp_mdntime || 1); // Size of the cell based on median playtime
+        } else {
+            rootNode = d3.hierarchy({ children: dataToUse })
+                .sum(d => d.stsp_mdntime)
+                .sort((a, b) => b.value - a.value);
+        }
 
         // Compute Voronoi Treemap
         let voronoiTreemap = d3.voronoiTreemap().clip(vis.clipPolygon);
@@ -182,7 +201,7 @@ class TreeMap {
         // Todo: Bind data to visual elements, update axes
 
         // Flatten hierarchy into nodes
-        let nodes = rootNode.descendants();
+        let nodes = rootNode.leaves();
 
         //Select tooltip
         let v_tooltip = d3.select("#v_tooltip");
@@ -197,7 +216,7 @@ class TreeMap {
                     ? vis.ColourScale(d.data.gfq_difficulty)
                     : vis.ColourScale(typeof d.data.avg_rating === "number" ? d.data.avg_rating : 0)
             )
-            .attr('stroke', '#fff')
+            .attr('stroke', '#171a21')
             .attr('stroke-width', 1)
             .on('mouseover', (event, d) => {
                 v_tooltip
@@ -219,7 +238,7 @@ class TreeMap {
             }).on('mouseout', (event, d) => {
                 v_tooltip.style("opacity", 0);
                 d3.select(event.target)
-                    .attr('stroke', '#fff')
+                    .attr('stroke', '#171a21')
                     .attr('stroke-width', 1);
             }).on("click", (event, d) => {
                 if (vis.level === 1) {
