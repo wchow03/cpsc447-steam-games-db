@@ -47,7 +47,7 @@ class TreeMap {
         ];
 
         // Define Colour scale for difficulty
-        vis.ColourScale = vis.getColourScale();
+        vis.colorScale = vis.getColorScale();
 
         // Select legend container
         vis.legendContainer = d3.select('.treemap .legend');
@@ -67,9 +67,9 @@ class TreeMap {
 
         // colour scheme based on level
         if (vis.level === 1) {
-            vis.ColourScale = vis.getColourScale();
+            vis.colorScale = vis.getColorScale();
         } else {
-            vis.ColourScale = d3.scaleSequential()
+            vis.colorScale = d3.scaleSequential()
                 .interpolator(d3.interpolateBlues)
                 .domain([0, 100]); // assuming avg_rating is on a 0–100 scale
         }
@@ -103,7 +103,7 @@ class TreeMap {
                 .style('width', '12px')
                 .style('height', '12px')
                 .style('border-radius', '50%')
-                .style('background-color', d => vis.ColourScale(d));
+                .style('background-color', d => vis.colorScale(d));
 
             legend.append('span')
                 .text(d => d ? d : 'Unknown');
@@ -126,12 +126,12 @@ class TreeMap {
 
             linearGradient.selectAll("stop")
                 .data([
-                    { offset: "0%", Colour: vis.ColourScale(0) },
-                    { offset: "100%", Colour: vis.ColourScale(100) }
+                    { offset: "0%", color: vis.colorScale(0) },
+                    { offset: "100%", color: vis.colorScale(100) }
                 ])
                 .join("stop")
                 .attr("offset", d => d.offset)
-                .attr("stop-color", d => d.Colour);
+                .attr("stop-color", d => d.color);
 
             svg.append("rect")
                 .attr("x", 10)
@@ -213,8 +213,8 @@ class TreeMap {
             .attr('d', d => d3.line()(d.polygon) + 'z') // Convert polygon data to path
             .attr('fill', d =>
                 vis.level === 1
-                    ? vis.ColourScale(d.data.gfq_difficulty)
-                    : vis.ColourScale(typeof d.data.avg_rating === "number" ? d.data.avg_rating : 0)
+                    ? vis.colorScale(d.data.gfq_difficulty)
+                    : vis.colorScale(typeof d.data.avg_rating === "number" ? d.data.avg_rating : 0)
             )
             .attr('stroke', '#171a21')
             .attr('stroke-width', 1)
@@ -252,7 +252,7 @@ class TreeMap {
             });
     }
 
-    getColourScale() {
+    getColorScale() {
         const diffs = [
             "Unforgiving",
             "Tough-Unforgiving",
@@ -265,17 +265,17 @@ class TreeMap {
             "Simple"
         ];
 
-        const templateColours = d3.schemeSpectral[9]; //diverging colour scheme option
-        const diffColours = {};
+        const templateColors = d3.schemeSpectral[9]; //diverging colour scheme option
+        const diffColors = {};
 
         diffs.forEach((label, i) => {
-            diffColours[label] = templateColours[i];
+            diffColors[label] = templateColors[i];
         });
 
-        diffColours["N/A"] = "#999999";
-        diffColours[null] = "#999999";
-        diffColours[undefined] = "#999999";
+        diffColors["N/A"] = "#999999";
+        diffColors[null] = "#999999";
+        diffColors[undefined] = "#999999";
 
-        return d => diffColours[d] || "#cccccc";
+        return d => diffColors[d] || "#cccccc";
     }
 }
