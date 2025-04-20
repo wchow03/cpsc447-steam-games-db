@@ -14,7 +14,7 @@ class BarChart {
             top: 0,
             right: 10,
             bottom: 10,
-            left: 10
+            left: 10 
         }
         // Todo: Add or remove attributes from config as needed
       }
